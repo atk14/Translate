@@ -2,7 +2,7 @@
         "name": "atk14/translate",
         "type": "library",
         "description": "A PHP class for converting strings between character maps",
-        "keywords": ["file","files"],
+        "keywords": ["charset","charmap","charmaps","character map","character maps","string","strings","utils"],
         "homepage": "https://github.com/atk14/Translate",
         "license": ["MIT"],
         "authors": [
