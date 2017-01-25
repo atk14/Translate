@@ -113,6 +113,10 @@ class Translate{
 			$text = Translate::_RemoveUtf8Headaches($text);
 		}
 
+		if($from_charset=="utf8" && $to_charset=="ascii"){
+			$text = Translate::_Transliteration($text);
+		}
+
 		if(TRANSLATE_USE_ICONV && function_exists('iconv')){
 			$success=true;
 			($out=@iconv($from_charset, $to_charset.'//TRANSLIT', $text)) or ($success=false);
@@ -164,7 +168,7 @@ class Translate{
 			"А" => "A",
 			"Б" => "B",
 			"В" => "V",
-			"Г" => "H",
+			"Г" => "G", // "H" (Ukrainian)
 			"Ґ" => "G",
 			"Д" => "D",
 			"E" => "E",
@@ -194,15 +198,15 @@ class Translate{
 			"Ю" => "Ju",
 			"Я" => "Ja",
 			"Ь" => "", // "'"
-			"Ё" => "-",
-			"Э" => "-",
-			"Ъ" => "-",
-			"Ы" => "-",
+			"Ё" => "E",
+			"Э" => "E",
+			"Ъ" => "", // '"'
+			"Ы" => "Y",
 
 			"а" => "a",
 			"б" => "b",
 			"в" => "v",
-			"г" => "h",
+			"г" => "g", // "h" (Ukrainian)
 			"ґ" => "g",
 			"д" => "d",
 			"e" => "e",
@@ -232,10 +236,10 @@ class Translate{
 			"ю" => "ju",
 			"я" => "ja",
 			"ь" => "", // "'"
-			"ё" => "-",
-			"э" => "-",
-			"ъ" => "-",
-			"ы" => "-",
+			"ё" => "e",
+			"э" => "e",
+			"ъ" => "", // '"'
+			"ы" => "y",
 		);
 		return strtr($text,$tr_table);
 	}
