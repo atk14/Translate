@@ -581,8 +581,7 @@ class Translate{
 	 */
 	static function CheckEncoding($text,$charset,$disallowed_char_sequencies = array()){
 		if(is_array($text)){
-			reset($text);
-			while(list($_key,$_value) = each($text)){
+			foreach($text as $_key => $_value){
 				$_stat_key = Translate::CheckEncoding($_key,$charset,$disallowed_char_sequencies);
 				$_stat_value = Translate::CheckEncoding($_value,$charset,$disallowed_char_sequencies);
 				if(!$_stat_key || !$_stat_value){
