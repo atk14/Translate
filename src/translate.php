@@ -4,9 +4,9 @@
  *
  *
  * @internal
- *	updates
- *	3.12.2003 - pridana funkce _TO_windows_1250
- *	4.12.2003 - pridana funkce _TO_ascii pro osmibitove kodovani
+ *  updates
+ *  3.12.2003 - pridana funkce _TO_windows_1250
+ *  4.12.2003 - pridana funkce _TO_ascii pro osmibitove kodovani
  * 15.12.2003 - pridana funkce _check_encoding_ascii a _check_encoding_utf8
  * 13.3.2006 - opravena chyba pri Translate::Lower($neco,"windows-1250") a Translate::Upper($neco,"windows-1250")
  * 13.3.2006 - do metod lower a upper pridano kodovani iso-8859-2
@@ -171,7 +171,8 @@ class Translate{
 			"Г" => "G", // "H" (Ukrainian)
 			"Ґ" => "G",
 			"Д" => "D",
-			"E" => "E",
+			"E" => "E", // ??
+			"Е" => "E", // ??
 			"Є" => "Je",
 			"Ж" => "Ž",
 			"З" => "Z",
@@ -209,7 +210,8 @@ class Translate{
 			"г" => "g", // "h" (Ukrainian)
 			"ґ" => "g",
 			"д" => "d",
-			"e" => "e",
+			"e" => "e", // ??
+			"е" => "e", // ??
 			"є" => "je",
 			"ж" => "ž",
 			"з" => "z",
@@ -715,22 +717,22 @@ class Translate{
 	 */
 	static function _LengthUtf8(&$str){
 		$i = 0;
-    $count = 0;
-    $len = strlen($str);
-    while ($i < $len) {
+		$count = 0;
+		$len = strlen($str);
+		while ($i < $len) {
 			$chr = ord ($str[$i]);
 			$count++;
 			$i++;
 			if ($i >= $len){ break; }
 
 			if ($chr & 0x80){
+				$chr <<= 1;
+				while ($chr & 0x80) {
+					$i++;
 					$chr <<= 1;
-					while ($chr & 0x80) {
-						$i++;
-						$chr <<= 1;
-					}
+				}
 			}
-    }
-    return $count;
+		}
+		return $count;
 	}
 }
