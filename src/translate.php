@@ -261,6 +261,10 @@ class Translate{
 				"Ö" => "Oe",
 				"Ü" => "Ue",
 				"ß" => "ss",
+
+				// Slovak - there are conflicts with German!!
+				"ä" => "a",
+				"Ä" => "A",
 			) + $tr_table;
 
 			$tr_table += array(
