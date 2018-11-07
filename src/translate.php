@@ -126,27 +126,29 @@ class Translate{
 
 		switch($to_charset){
 			case "iso-8859-2":
-				return Translate::_TO_iso_8859_2($text,$from_charset);
+				$text = Translate::_TO_iso_8859_2($text,$from_charset);
 				break;
 			case "utf8":
-				return Translate::_TO_utf8($text,$from_charset);
+				$text = Translate::_TO_utf8($text,$from_charset);
 				break;
 			case "windows-1250":
-			  return Translate::_TO_windows_1250($text,$from_charset);
+			  $text = Translate::_TO_windows_1250($text,$from_charset);
 				break;
 			case "852":
-				return Translate::_TO_852($text,$from_charset);
+				$text = Translate::_TO_852($text,$from_charset);
 				break;			
 			case "ascii":
-				return Translate::_TO_ascii($text,$from_charset);
+				$text = Translate::_TO_ascii($text,$from_charset);
 				break;
 			case "HTML entities":
-				return Translate::_TO_HTML_entitites($text,$from_charset);
-				break;
-			default: 
-				return $text;
+				$text = Translate::_TO_HTML_entitites($text,$from_charset);
 				break;
 		}
+
+		if($from_charset=="utf8" && $to_charset=="ascii"){
+			$text = Translate::_RemoveUtf8Chars($text);
+		}
+
 		return $text;
 	}
 
@@ -158,101 +160,140 @@ class Translate{
 	static function _RemoveUtf8Headaches($text){
 		return strtr($text,array(
 			chr(0xE2).chr(0x80).chr(0x93) => "-",
+			chr(0xC2).chr(0xA0) => " ", // Non-breaking space
 		));
 	}
 
 	static function _Transliteration($text){
-		$tr_table = array(
-			// Cyrillic Transliteration Table
-			// http://homes.chass.utoronto.ca/~tarn/courses/translit-table.html
-			"А" => "A",
-			"Б" => "B",
-			"В" => "V",
-			"Г" => "G", // "H" (Ukrainian)
-			"Ґ" => "G",
-			"Д" => "D",
-			"E" => "E", // ??
-			"Е" => "E", // ??
-			"Є" => "Je",
-			"Ж" => "Ž",
-			"З" => "Z",
-			"И" => "Y",
-			"І" => "I",
-			"Ї" => "Ji",
-			"Й" => "J",
-			"К" => "K",
-			"Л" => "L",
-			"М" => "M",
-			"Н" => "N",
-			"О" => "O",
-			"П" => "P",
-			"Р" => "R",
-			"С" => "S",
-			"Т" => "T",
-			"У" => "U",
-			"Ф" => "F",
-			"Х" => "X",
-			"Ц" => "C",
-			"Ч" => "Č",
-			"Ш" => "Š",
-			"Щ" => "Šč",
-			"Ю" => "Ju",
-			"Я" => "Ja",
-			"Ь" => "", // "'"
-			"Ё" => "E",
-			"Э" => "E",
-			"Ъ" => "", // '"'
-			"Ы" => "Y",
-			//
-			"а" => "a",
-			"б" => "b",
-			"в" => "v",
-			"г" => "g", // "h" (Ukrainian)
-			"ґ" => "g",
-			"д" => "d",
-			"e" => "e", // ??
-			"е" => "e", // ??
-			"є" => "je",
-			"ж" => "ž",
-			"з" => "z",
-			"и" => "y",
-			"і" => "i",
-			"ї" => "ji",
-			"й" => "j",
-			"к" => "k",
-			"л" => "l",
-			"м" => "m",
-			"н" => "n",
-			"о" => "o",
-			"п" => "p",
-			"р" => "r",
-			"с" => "s",
-			"т" => "t",
-			"у" => "u",
-			"ф" => "f",
-			"х" => "x",
-			"ц" => "c",
-			"ч" => "č",
-			"ш" => "š",
-			"щ" => "šč",
-			"ю" => "ju",
-			"я" => "ja",
-			"ь" => "", // "'"
-			"ё" => "e",
-			"э" => "e",
-			"ъ" => "", // '"'
-			"ы" => "y",
+		static $tr_table;
 
-			// German
-			"ä" => "ae",
-			"ö" => "oe",
-			"ü" => "ue",
-			"Ä" => "Ae",
-			"Ö" => "Oe",
-			"Ü" => "Ue",
-			"ß" => "ss",
-		);
+		if(!$tr_table){
+			// the new table for transliteration
+			require_once(__DIR__ . "/tr_tables/transliteration/tr_table.php");
+
+			// the original array for transliteration
+			$tr_table = array(
+				// Cyrillic Transliteration Table
+				// http://homes.chass.utoronto.ca/~tarn/courses/translit-table.html
+				"А" => "A",
+				"Б" => "B",
+				"В" => "V",
+				"Г" => "G", // "H" (Ukrainian)
+				"Ґ" => "G",
+				"Д" => "D",
+				"E" => "E", // ??
+				"Е" => "E", // ??
+				"Є" => "Je",
+				"Ж" => "Ž",
+				"З" => "Z",
+				"И" => "Y",
+				"І" => "I",
+				"Ї" => "Ji",
+				"Й" => "J",
+				"К" => "K",
+				"Л" => "L",
+				"М" => "M",
+				"Н" => "N",
+				"О" => "O",
+				"П" => "P",
+				"Р" => "R",
+				"С" => "S",
+				"Т" => "T",
+				"У" => "U",
+				"Ф" => "F",
+				"Х" => "X",
+				"Ц" => "C",
+				"Ч" => "Č",
+				"Ш" => "Š",
+				"Щ" => "Šč",
+				"Ю" => "Ju",
+				"Я" => "Ja",
+				"Ь" => "", // "'"
+				"Ё" => "E",
+				"Э" => "E",
+				"Ъ" => "", // '"'
+				"Ы" => "Y",
+				//
+				"а" => "a",
+				"б" => "b",
+				"в" => "v",
+				"г" => "g", // "h" (Ukrainian)
+				"ґ" => "g",
+				"д" => "d",
+				"e" => "e", // ??
+				"е" => "e", // ??
+				"є" => "je",
+				"ж" => "ž",
+				"з" => "z",
+				"и" => "y",
+				"і" => "i",
+				"ї" => "ji",
+				"й" => "j",
+				"к" => "k",
+				"л" => "l",
+				"м" => "m",
+				"н" => "n",
+				"о" => "o",
+				"п" => "p",
+				"р" => "r",
+				"с" => "s",
+				"т" => "t",
+				"у" => "u",
+				"ф" => "f",
+				"х" => "x",
+				"ц" => "c",
+				"ч" => "č",
+				"ш" => "š",
+				"щ" => "šč",
+				"ю" => "ju",
+				"я" => "ja",
+				"ь" => "", // "'"
+				"ё" => "e",
+				"э" => "e",
+				"ъ" => "", // '"'
+				"ы" => "y",
+
+				// German
+				"ä" => "ae",
+				"ö" => "oe",
+				"ü" => "ue",
+				"Ä" => "Ae",
+				"Ö" => "Oe",
+				"Ü" => "Ue",
+				"ß" => "ss",
+
+				// Slovak - there are conflicts with German!!
+				"ä" => "a",
+				"Ä" => "A",
+			) + $tr_table;
+
+			$tr_table += array(
+				"–" => "-", // ndash
+				"—" => "-", // mdash
+				"®" => "(R)",
+				"™" => "TM",
+				"¼" => "1/4",
+				"½" => "1/2",
+				"¾" => "3/4",
+				"…" => "...", // hellip
+			) + $tr_table;
+
+		}
 		return strtr($text,$tr_table);
+	}
+
+	static function _RemoveUtf8Chars($text,$options = array()){
+		$options += array(
+			"unknown" => "?",
+		);
+
+		$chars = preg_split('//u',$text);
+		foreach($chars as &$char){
+			if(strlen($char)>1){
+				$char = $options["unknown"];
+			}
+		}
+		return join("",$chars);
 	}
 
 	/**
