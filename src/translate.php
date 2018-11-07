@@ -69,6 +69,8 @@ defined("TRANSLATE_USE_ICONV") || define("TRANSLATE_USE_ICONV",false);
  */
 class Translate{
 
+	const VERSION = "1.2";
+
 	/**
 	 * Converts string from source charset to target charset.
 	 *
