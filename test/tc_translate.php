@@ -185,8 +185,8 @@ class TcTranslate extends TcBase{
 		$this->assertEquals("PRILIS ZLUTOUCKY KUN UPEL DABELSKE ODY",Translate::Trans("PŘÍLIŠ ŽLUŤOUČKÝ KŮŇ ÚPĚL ĎÁBELSKÉ ÓDY","UTF-8","ASCII"));
 
 		// Slovak
-		$this->assertEquals("klud, maso, dlzka",Translate::Trans("kľud, mäso, dĺžka","UTF-8","ASCII"));
-		$this->assertEquals("KLUD, MASO, DLZKA",Translate::Trans("KĽUD, MÄSO, DĹŽKA","UTF-8","ASCII"));
+		$this->assertEquals("klud, maso, dlzka, kopor",Translate::Trans("kľud, mäso, dĺžka, kôpor","UTF-8","ASCII"));
+		$this->assertEquals("KLUD, MASO, DLZKA, KOPOR",Translate::Trans("KĽUD, MÄSO, DĹŽKA, KÔPOR","UTF-8","ASCII"));
 
 		// Cyrillic
 		$this->assertEquals("Russkyj",Translate::Trans("Русский","UTF-8","ASCII"));
