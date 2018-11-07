@@ -235,6 +235,11 @@ class TcTranslate extends TcBase{
     }
     
   }
+
+	function test__RemoveUtf8Chars(){
+		$this->assertEquals("li?ti?ka",Translate::_RemoveUtf8Chars("lištička"));
+		$this->assertEquals("li_ti_ka",Translate::_RemoveUtf8Chars("lištička",array("unknown" => "_")));
+	}
   
   function test_error()
   {
@@ -274,8 +279,7 @@ class TcTranslate extends TcBase{
   curl_close($session);
   return trim($response);
  }
-	
- 
+
  #some transliterations can be done by more ways: make them equals  
   function normalize($t)
   {
