@@ -319,19 +319,16 @@ class Translate{
 				if(!isset($TR_TABLES[$charset])){
 					require(dirname(__FILE__)."/tr_tables/lower_upper/$charset.php");
 				}
-				return strtr($text,$TR_TABLES[$charset]["velka"],$TR_TABLES[$charset]["mala"]);
+				$text = strtr($text,$TR_TABLES[$charset]["velka"],$TR_TABLES[$charset]["mala"]);
 				break;
 			case "utf8":
-				// TODO: rewrite this masterpiece :)
-				$text = self::Trans($text,"utf8","iso-8859-2");
-				$text = self::Lower($text,"iso-8859-2");
-				return self::Trans($text,"iso-8859-2","utf8");
+				$text = mb_strtolower($text,"utf8");
 				break;
-			case "ascii":
 			default: 
-				return strtolower($text);
-				break;
+				$text = strtolower($text);
 		}
+
+		return $text;
 	}
 
 	/**
@@ -351,19 +348,17 @@ class Translate{
 				if(!isset($TR_TABLES[$charset])){
 					require(dirname(__FILE__)."/tr_tables/lower_upper/$charset.php");
 				}
-				return strtr($text,$TR_TABLES[$charset]["mala"],$TR_TABLES[$charset]["velka"]);
+				$text = strtr($text,$TR_TABLES[$charset]["mala"],$TR_TABLES[$charset]["velka"]);
 				break;
 			case "utf8":
-				// TODO: rewrite this masterpiece :)
-				$text = self::Trans($text,"utf8","iso-8859-2");
-				$text = self::Upper($text,"iso-8859-2");
-				return self::Trans($text,"iso-8859-2","utf8");
+				$text = mb_strtoupper($text,"utf8");
 				break;
 			case "ascii":
 			default: 
-				return strtoupper($text);
-				break;
+				$text = strtoupper($text);
 		}
+
+		return $text;
 	}
 
 	/**
