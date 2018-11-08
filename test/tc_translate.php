@@ -198,6 +198,11 @@ class TcTranslate extends TcBase{
 		$this->assertEquals("Was koennen Jager absetzen?",Translate::Trans("Was können Jäger absetzen?","UTF-8","ASCII"));
 		$this->assertEquals("Fuss",Translate::Trans("Fuß","UTF-8","ASCII"));
 
+		// Symbols
+		$this->assertEquals("(R) (c)",Translate::Trans("® ©","UTF-8","ASCII"));
+		$this->assertEquals("? paragraph",Translate::Trans("§ paragraph","UTF-8","ASCII"));
+
+
 		// TODO: otestovat locale
 		$_LANG_LC_ALL = "cs_CZ.UTF-8";
 		$_LANG_LC_ALL = "en_US.UTF-8";
