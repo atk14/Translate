@@ -629,6 +629,7 @@ class Translate{
 			return true;
 		}
 
+		settype($text,"string");
 		settype($charset,"string");
 		settype($disallowed_char_sequencies,"array");
 		$charset = self::_GetCharsetByName($charset);
