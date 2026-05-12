@@ -71,6 +71,48 @@ class Translate{
 
 	const VERSION = "1.2.2";
 
+	static protected $WHITE_CHARACTERS = [
+		"\xC2\xA0", // No-Break Space (NBSP)
+		"\xE1\x9A\x80", // Ogham Space Mark
+		"\xE2\x80\x80", // En Quad
+		"\xE2\x80\x81", // Em Quad
+		"\xE2\x80\x82", // En Space
+		"\xE2\x80\x83", // Em Space
+		"\xE2\x80\x84", // Three-Per-Em Space
+		"\xE2\x80\x85", // Four-Per-Em Space
+		"\xE2\x80\x86", // Six-Per-Em Space
+		"\xE2\x80\x87", // Figure Space
+		"\xE2\x80\x88", // Punctuation Space
+		"\xE2\x80\x89", // Thin Space
+		"\xE2\x80\x8A", // Hair Space
+		"\xE2\x80\xA8", // Line Separator
+		"\xE2\x80\xA9", // Paragraph Separator
+		"\xE2\x80\xAF", // Narrow No-Break Space
+		"\xE2\x81\x9F", // Medium Mathematical Space
+		"\xE3\x80\x80", // Ideographic Space
+	];
+
+	static protected $INVISIBLE_CHARACTERS = [
+		"\x00", // Null byte
+		"\xC2\xAD", // Soft Hyphen
+		"\xCD\x8F", // Combining Grapheme Joiner
+		"\xE1\xA0\x8E", // Mongolian Vowel Separator
+		"\xE2\x80\x8B", // Zero Width Space (ZWSP)
+		"\xE2\x80\x8C", // Zero Width Non-Joiner (ZWNJ)
+		"\xE2\x80\x8D", // Zero Width Joiner (ZWJ)
+		"\xE2\x81\xA0", // Word Joiner
+		"\xE2\x80\xAA", // Left-to-Right Embedding (LRE)
+		"\xE2\x80\xAB", // Right-to-Left Embedding (RLE)
+		"\xE2\x80\xAC", // Pop Directional Formatting (PDF)
+		"\xE2\x80\xAD", // Left-to-Right Override (LRO)
+		"\xE2\x80\xAE", // Right-to-Left Override (RLO)
+		"\xE2\x81\xA1", // Function Application
+		"\xE2\x81\xA2", // Invisible Times
+		"\xE2\x81\xA3", // Invisible Separator
+		"\xE2\x81\xA4", // Invisible Plus
+		"\xEF\xBB\xBF", // Byte Order Mark (BOM)
+	];
+
 	/**
 	 * Converts string from source charset to target charset.
 	 *
@@ -152,11 +194,16 @@ class Translate{
 	 * @ignore
 	 */
 	static function _RemoveUtf8Headaches($text){
-		return strtr($text,array(
+		$out = strtr($text,array(
 			chr(0xE2).chr(0x80).chr(0x93) => "-", // en-dash U+2013
 			chr(0xE2).chr(0x80).chr(0x94) => "-", // em-dash U+2014
-			chr(0xC2).chr(0xA0) => " ", // Non-breaking space
+			chr(0xC2).chr(0xA0) => " ", // No-Break Space U+00A0
+			chr(0xC2).chr(0x85) => "\n", // Next Line U+0085
 		));
+		$out = str_replace(self::$WHITE_CHARACTERS,array_fill(0,count(self::$WHITE_CHARACTERS)," "),$out);
+		$out = str_replace(self::$INVISIBLE_CHARACTERS,array_fill(0,count(self::$INVISIBLE_CHARACTERS),""),$out);
+
+		return $out;
 	}
 
 	static function _Transliteration($text){

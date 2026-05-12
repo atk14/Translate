@@ -126,6 +126,16 @@ class TcTranslate extends TcBase{
 		$text = html_entity_decode("&mdash;&ndash;&nbsp;");
 		$out = Translate::Trans($text,"utf-8","ascii");
 		$this->assertEquals("-- ",$out);
+
+		$tr = [
+			chr(0xC2).chr(0x85) => "\n", // Next Line U+0085
+			"\xE2\x80\x80" => " ", // En Quad
+			"\xEF\xBB\xBF" => "", // BOM
+		];
+		$text = join("",array_keys($tr));
+		$out = Translate::Trans($text,"utf-8","ascii");
+		$expected = join("",$tr);
+		$this->assertEquals($expected,$out);
 	}
 
 	function test_to_cp852(){
