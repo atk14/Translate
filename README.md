@@ -18,6 +18,25 @@ Use the Composer to install the panel.
     cd path/to/your/project/
     composer require atk14/translate dev-master
 
+Testing
+-------
+
+Translate is tested automatically via GitHub Actions across PHP 5.6 to PHP 8.5.
+
+Tests use the [atk14/tester](https://packagist.org/packages/atk14/tester) wrapper for [phpunit/phpunit](https://packagist.org/packages/phpunit/phpunit).
+
+Install development dependencies:
+
+```bash
+composer update --dev
+```
+
+Run the test suite:
+
+```bash
+./vendor/bin/run_unit_tests test
+```
+
 Licence
 -------
 
