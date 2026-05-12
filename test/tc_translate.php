@@ -122,6 +122,12 @@ class TcTranslate extends TcBase{
 		$this->assertEquals(chr(0x80),$out);
 	}
 
+	function test__RemoveUtf8Headaches(){
+		$text = html_entity_decode("&mdash;&ndash;&nbsp;");
+		$out = Translate::Trans($text,"utf-8","ascii");
+		$this->assertEquals("-- ",$out);
+	}
+
 	function test_to_cp852(){
 		$this->assertEquals("hello",Translate::Trans("hello","utf-8","cp852"));
 

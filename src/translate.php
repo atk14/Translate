@@ -153,7 +153,8 @@ class Translate{
 	 */
 	static function _RemoveUtf8Headaches($text){
 		return strtr($text,array(
-			chr(0xE2).chr(0x80).chr(0x93) => "-",
+			chr(0xE2).chr(0x80).chr(0x93) => "-", // en-dash U+2013
+			chr(0xE2).chr(0x80).chr(0x94) => "-", // em-dash U+2014
 			chr(0xC2).chr(0xA0) => " ", // Non-breaking space
 		));
 	}
