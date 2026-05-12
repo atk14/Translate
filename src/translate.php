@@ -709,7 +709,7 @@ class Translate{
 	/**
 	 * @ignore
 	 */
-	static function _CheckEncodingUtf8(&$text){
+	static function _CheckEncodingUtf8($text){
 
 		$_11111110 = 0xFE;
 		$_11111100 = 0xFC;
@@ -768,7 +768,7 @@ class Translate{
 	/**
 	 * @ignore
 	 */
-	static function _CheckEncodingAscii(&$text){
+	static function _CheckEncodingAscii($text){
 		$_len = strlen($text);
 
 		for($i=0;$i<$_len;$i++){
@@ -788,7 +788,7 @@ class Translate{
 	 * @param string $charset
 	 * @return integer
 	 */
-	static function Length(&$text,$charset){
+	static function Length($text,$charset){
 		$charset = self::_GetCharsetByName($charset);
 		switch($charset){
 			case "utf8":
@@ -801,7 +801,7 @@ class Translate{
 	/**
 	 * @ignore
 	 */
-	static function _LengthUtf8(&$str){
+	static function _LengthUtf8($str){
 		$i = 0;
 		$count = 0;
 		$len = strlen($str);
