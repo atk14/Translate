@@ -98,6 +98,15 @@ class TcTranslate extends TcBase{
 		$this->assertFalse(Translate::CheckEncoding($text,"utf-8"));
 	}
 
+	function test_conflict_between_slovag_and_german_in_transliteration(){
+		$this->assertEquals("maso",Translate::Trans("mäso","utf-8","ascii")); // default is Slovak language
+		$this->assertEquals("MASO",Translate::Trans("MÄSO","utf-8","ascii"));
+		$this->assertEquals("maso",Translate::Trans("mäso","utf-8","ascii",["language" => "sk"]));
+		$this->assertEquals("maenner",Translate::Trans("männer","utf-8","ascii",["language" => "de"]));
+		$this->assertEquals("Aepfel",Translate::Trans("Äpfel","utf-8","ascii",["language" => "de_DE"]));
+		$this->assertEquals("Aepfel",Translate::Trans("Äpfel","utf-8","ascii",["language" => "DE"]));
+	}
+
 	function test_hacks(){
 		$text = chr(0xE2).chr(0x80).chr(0x93);
 		$this->assertTrue(Translate::CheckEncoding($text,"utf-8"));
@@ -223,20 +232,12 @@ class TcTranslate extends TcBase{
 		$this->assertEquals("Specyalyzacyja",Translate::Trans("Специализация","UTF-8","ASCII"));
 
 		// German
-		$this->assertEquals("Was koennen Jager absetzen?",Translate::Trans("Was können Jäger absetzen?","UTF-8","ASCII"));
+		$this->assertEquals("Was koennen Jaeger absetzen?",Translate::Trans("Was können Jäger absetzen?","UTF-8","ASCII",["language" => "de"]));
 		$this->assertEquals("Fuss",Translate::Trans("Fuß","UTF-8","ASCII"));
 
 		// Symbols
 		$this->assertEquals("(R) (c)",Translate::Trans("® ©","UTF-8","ASCII"));
 		$this->assertEquals("? ? (Symbols)",Translate::Trans("§ • (Symbols)","UTF-8","ASCII"));
-
-		// TODO: otestovat locale
-		$_LANG_LC_ALL = "cs_CZ.UTF-8";
-		$_LANG_LC_ALL = "en_US.UTF-8";
-		putenv("LANG=$_LANG_LC_ALL");
-		putenv("LANGUAGE=$_LANG_LC_ALL");
-		setlocale(LC_MESSAGES,$_LANG_LC_ALL);
-		$this->assertEquals("Jan BRUSEK",Translate::Trans("Jan BŘUŠEK","UTF-8","ASCII"));
 	}
 
 	function test_translit_whole()

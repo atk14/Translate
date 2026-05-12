@@ -125,10 +125,16 @@ class Translate{
 	 * @param string $from_charset input charset
 	 * @param string $to_charset output charset
 	 * @param array $options
+	 * - language e.g. "en", "en_US", "sk", "sk_SK", "de"...
 	 * - recode_array_keys usable only when $text is array; then also keys will be converted
 	 * @return string|array
 	 */
 	static function Trans($text,$from_charset,$to_charset,$options = []){
+		$options += [
+			"language" => "", // "sk", "de", "en", "eu_US"....
+			"recode_array_keys" => false,
+		];
+
 		$from_charset = self::_GetCharsetByName($from_charset);
 		$to_charset = self::_GetCharsetByName($to_charset);
 		if($from_charset==$to_charset){
@@ -145,10 +151,10 @@ class Translate{
 			$out = [];
 			foreach($text as $key => $value){
 				$_key = $key;
-				if(isset($options["recode_array_keys"]) && $options["recode_array_keys"]){
-					$_key = self::_Trans($key,$from_charset,$to_charset);
+				if($options["recode_array_keys"]){
+					$_key = self::_Trans($key,$from_charset,$to_charset,$options);
 				}
-				$out[$_key] = (is_string($text[$key]) || is_array($text[$key])) ? self::_Trans($text[$key],$from_charset,$to_charset) : $text[$key];
+				$out[$_key] = (is_string($text[$key]) || is_array($text[$key])) ? self::_Trans($text[$key],$from_charset,$to_charset,$options) : $text[$key];
 			}
 			return $out;
 		}
@@ -178,7 +184,7 @@ class Translate{
 				$text = self::_TO_852($text,$from_charset);
 				break;			
 			case "ascii":
-				$text = self::_TO_ascii($text,$from_charset);
+				$text = self::_TO_ascii($text,$from_charset,$options["language"]);
 				break;
 			case "HTML entities":
 				$text = self::_TO_HTML_entitites($text,$from_charset);
@@ -206,7 +212,7 @@ class Translate{
 		return $out;
 	}
 
-	static function _Transliteration($text){
+	static function _Transliteration($text,$language){
 		static $tr_table = null;
 
 		if($tr_table === null){
@@ -303,7 +309,7 @@ class Translate{
 				"Ü" => "Ue",
 				"ß" => "ss",
 
-				// Slovak - there are conflicts with German!!
+				// Slovak - there are conflicts with German!! Resolved bellow.
 				"ä" => "a",
 				"Ä" => "A",
 				"ľ" => "l",
@@ -333,6 +339,15 @@ class Translate{
 			] + $tr_table;
 
 		}
+
+		// Fix for the conflict between Slovak and German
+		if(strlen($language)>=2 && strtolower($language[0].$language[1])=="de"){
+			$text = strtr($text,[
+				"ä" => "ae",
+				"Ä" => "Ae",
+			]);
+		}
+
 		return strtr($text,$tr_table);
 	}
 
@@ -629,7 +644,7 @@ class Translate{
 	/**
 	 * @ignore
 	 */
-	static function _TO_ascii(&$text,$from_cp){
+	static function _TO_ascii(&$text,$from_cp,$language){
 		static $TR_TABLES = [];
 
 		switch ($from_cp){
@@ -643,7 +658,7 @@ class Translate{
 				$text = strtr($text,$TR_TABLES["$from_cp"]);
 				break;
 			case "utf8":
-				$text = self::_Transliteration($text);
+				$text = self::_Transliteration($text,$language);
 				$text = self::_RemoveUtf8Chars($text);
 				break;
 		}
