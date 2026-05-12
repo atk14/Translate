@@ -12,7 +12,7 @@ class TcTranslate extends TcBase{
 
 		$ar_iso = Translate::Trans($ar_utf8,"UTF-8","ISO-8859-2");
 		$this->assertTrue(is_array($ar_iso));
-		$this->assertEquals(2,sizeof($ar_iso));
+		$this->assertEquals(2,count($ar_iso));
 		foreach($ar_iso as $_key => $_value){
 			$this->assertTrue(Translate::CheckEncoding($_key,"UTF-8")); // klice zustaly v UTF-8
 			$this->assertFalse(Translate::CheckEncoding($_value,"UTF-8")); // kdezto hodnoty uz musi byt prekodovane
@@ -21,7 +21,7 @@ class TcTranslate extends TcBase{
 
 		$ar_iso = Translate::Trans($ar_utf8,"UTF-8","ISO-8859-2",["recode_array_keys" => true]);
 		$this->assertTrue(is_array($ar_iso));
-		$this->assertEquals(2,sizeof($ar_iso));
+		$this->assertEquals(2,count($ar_iso));
 		foreach($ar_iso as $_key => $_value){
 		  $this->assertFalse(Translate::CheckEncoding($_key,"UTF-8")); // v teto chvili uz jsou i klice prekodovane do latin 2
 			$this->assertFalse(Translate::CheckEncoding($_value,"UTF-8")); 
