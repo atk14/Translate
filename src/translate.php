@@ -207,9 +207,9 @@ class Translate{
 	}
 
 	static function _Transliteration($text){
-		static $tr_table;
+		static $tr_table = null;
 
-		if(!$tr_table){
+		if($tr_table === null){
 			// the new table for transliteration
 			require(__DIR__ . "/tr_tables/transliteration/tr_table.php");
 
