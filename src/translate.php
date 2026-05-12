@@ -310,6 +310,7 @@ class Translate{
 	 * @return string
 	 */
 	static function Lower($text,$charset = null){
+		$text = (string)$text;
 		static $TR_TABLES = array();
 
 		$charset = self::_GetCharsetByName($charset);
@@ -341,6 +342,7 @@ class Translate{
 	static function Upper($text,$charset = null){
 		static $TR_TABLES = array();
 
+		$text = (string)$text;
 		$charset = self::_GetCharsetByName($charset);
 		switch($charset){
 			case "windows-1250":
@@ -354,7 +356,7 @@ class Translate{
 				$text = mb_strtoupper($text,"utf8");
 				break;
 			case "ascii":
-			default: 
+			default:
 				$text = strtoupper($text);
 		}
 
