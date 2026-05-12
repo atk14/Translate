@@ -1,6 +1,8 @@
 Translate
 =========
 
+[![Tests](https://github.com/atk14/Translate/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/atk14/Translate/actions/workflows/tests.yml)
+
 A PHP class for converting strings between character maps
 
 Basic usage
