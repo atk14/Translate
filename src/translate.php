@@ -696,7 +696,7 @@ class Translate{
 
 		if($out && sizeof($disallowed_char_sequencies)>0){
 			for($i=0;$i<sizeof($disallowed_char_sequencies);$i++){
-				if(is_int(strpos($text,$disallowed_char_sequencies[$i]))){
+				if(strpos($text,$disallowed_char_sequencies[$i]) !== false){
 					$out = false;
 					break;
 				}
