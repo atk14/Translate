@@ -69,7 +69,7 @@ defined("TRANSLATE_USE_ICONV") || define("TRANSLATE_USE_ICONV",false);
  */
 class Translate{
 
-	const VERSION = "1.2.2";
+	const VERSION = "1.2.3";
 
 	static protected $WHITE_CHARACTERS = [
 		"\xC2\xA0", // No-Break Space (NBSP)

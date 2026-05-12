@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [1.2.3] 2026-05-12
+
+* 00858bd - Translate::Trans() function accepts a language parameter to ensure correct transliteration to ASCII
+* 09eb125 - Package is compatible with PHP>=5.6
+* Source code refactored, polished and fixed
+
 ## [1.2.2] 2019-11-16
 - Translate is compatible with PHP7.4
 
