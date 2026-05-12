@@ -5,10 +5,10 @@
 class TcTranslate extends TcBase{
 
 	function test_translate_array(){
-		$ar_utf8 = array(
+		$ar_utf8 = [
 			"klíč1" => "ěš",
 			"klíč2" => "šč"
-		);
+		];
 
 		$ar_iso = Translate::Trans($ar_utf8,"UTF-8","ISO-8859-2");
 		$this->assertTrue(is_array($ar_iso));
@@ -19,7 +19,7 @@ class TcTranslate extends TcBase{
 			$this->assertEquals(2,strlen($_value));	
 		}
 
-		$ar_iso = Translate::Trans($ar_utf8,"UTF-8","ISO-8859-2",array("recode_array_keys" => true));
+		$ar_iso = Translate::Trans($ar_utf8,"UTF-8","ISO-8859-2",["recode_array_keys" => true]);
 		$this->assertTrue(is_array($ar_iso));
 		$this->assertEquals(2,sizeof($ar_iso));
 		foreach($ar_iso as $_key => $_value){
@@ -63,26 +63,26 @@ class TcTranslate extends TcBase{
 		$this->assertTrue(Translate::CheckEncoding($text,"ascii"));
 		$this->assertTrue(Translate::CheckEncoding($text,"utf-8"));
 
-		$text = array(
+		$text = [
 			"test",
 			"ascii"
-		);
+		];
 
 		$this->assertTrue(Translate::CheckEncoding($text,"ascii"));
 		$this->assertTrue(Translate::CheckEncoding($text,"utf-8"));
 
-		$text = array(
+		$text = [
 			"key1" => "value1",
 			"key2" => "value2",
-		);
+		];
 		$this->assertTrue(Translate::CheckEncoding($text,"utf-8"));
-		$text["key3"] = array("value3.1","value3.2");
+		$text["key3"] = ["value3.1","value3.2"];
 		$this->assertTrue(Translate::CheckEncoding($text,"utf-8"));
-		$text["key4"] = array("value4.1","value4.2".chr(250)); //invalid UTF-8 sequence in array value
+		$text["key4"] = ["value4.1","value4.2".chr(250)]; //invalid UTF-8 sequence in array value
 		$this->assertFalse(Translate::CheckEncoding($text,"utf-8"));
 		unset($text["key4"]);
 		$this->assertTrue(Translate::CheckEncoding($text,"utf-8"));
-		$text["key4"] = array(array("key4.1".chr(250) => "value4.1.2")); //invalid UTF-8 sequence in array key
+		$text["key4"] = [["key4.1".chr(250) => "value4.1.2"]]; //invalid UTF-8 sequence in array key
 		$this->assertFalse(Translate::CheckEncoding($text,"utf-8"));
 
 		$text = chr(0xC3).chr(0xA2).chr(0x80).chr(0x93);
@@ -147,11 +147,11 @@ class TcTranslate extends TcBase{
 	}
 
 	function test_translate_array_with_integers(){
-		$ar = array(
+		$ar = [
 			"word" => "čepice",
 			"int" => 13,
 			"null" => null
-		);
+		];
 		$ar = Translate::Trans($ar,"UTF-8","ASCII");
 		$this->assertEquals("cepice",$ar["word"]);
 
@@ -161,13 +161,13 @@ class TcTranslate extends TcBase{
 		$this->assertNull($ar["null"]);
 
 		// ----
-		$ar = array(
-			"parent" => array(
+		$ar = [
+			"parent" => [
 				"word" => "čepice",
 				"int" => 13,
 				"null" => null
-			)
-		);
+			]
+		];
 		$ar = Translate::Trans($ar,"UTF-8","ASCII");
 		$this->assertEquals("cepice",$ar["parent"]["word"]);
 
@@ -243,7 +243,7 @@ class TcTranslate extends TcBase{
 	{
 	$text="Příliš žluťoučký kůň úpěl ďábelské ódy! logik@centrum.cz-_' \"Řeže";
 	$charset="utf8";
-	$charsets=array("windows-1250", "latin2", "utf8");
+	$charsets=["windows-1250", "latin2", "utf8"];
 	foreach($charsets as $c)
 	  {
 	  $t=Translate::Trans($text, $charset, $c);
@@ -278,7 +278,7 @@ class TcTranslate extends TcBase{
 
 	function test__RemoveUtf8Chars(){
 		$this->assertEquals("li?ti?ka",Translate::_RemoveUtf8Chars("lištička"));
-		$this->assertEquals("li_ti_ka",Translate::_RemoveUtf8Chars("lištička",array("unknown" => "_")));
+		$this->assertEquals("li_ti_ka",Translate::_RemoveUtf8Chars("lištička",["unknown" => "_"]));
 	}
   
   function test_error()
@@ -286,7 +286,7 @@ class TcTranslate extends TcBase{
     //errors handling
   $text="ŘzŘPříliš žluťoučký kůň úpěl ďábelské ódy! logik@centrum.cz-_' \"Řeže";
 	$charset="utf8";
-	$charsets=array("windows-1250", "latin2", "utf8");
+	$charsets=["windows-1250", "latin2", "utf8"];
 	foreach($charsets as $c)
 	  {
 	  $t=Translate::Trans(substr($text,1), $charset, $c);
@@ -310,7 +310,7 @@ class TcTranslate extends TcBase{
   // Tell curl to use HTTP POST
   curl_setopt ($session, CURLOPT_POST, true);
   // Tell curl that this is the body of the POST
-  $params=array("cco" => 1, "s"=> $text, "inset" => $from, "outset" => $to);
+  $params=["cco" => 1, "s"=> $text, "inset" => $from, "outset" => $to];
   curl_setopt ($session, CURLOPT_POSTFIELDS, $params);
   // Tell curl not to return headers, but do return the response
   curl_setopt($session, CURLOPT_HEADER, false);
@@ -324,14 +324,14 @@ class TcTranslate extends TcBase{
   function normalize($t)
   {
     for($r=0;$r<5;$r++) $t=strtr($t,
-      array(
+      [
         ",," => "\"",
         "´" => "'",
         chr(180) => "'", #win1250 apostrof
         "`" => "'",
         "\"," => "\"'",
         "''" => "\"",
-        )
+        ]
       );
     return $t;
   }
@@ -350,7 +350,7 @@ class TcTranslate extends TcBase{
   +-„“‚‘»«…’
   teď už jo";
 	$c="utf8";
-	$charsets=array("windows-1250", "latin2", "utf8");
+	$charsets=["windows-1250", "latin2", "utf8"];
 	foreach($charsets as $c2)
 	    {
 	    $d=$this->normalize($this->translate_online($text,$c, $c2));

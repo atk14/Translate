@@ -128,7 +128,7 @@ class Translate{
 	 * - recode_array_keys usable only when $text is array; then also keys will be converted
 	 * @return string|array
 	 */
-	static function Trans($text,$from_charset,$to_charset,$options = array()){
+	static function Trans($text,$from_charset,$to_charset,$options = []){
 		$from_charset = self::_GetCharsetByName($from_charset);
 		$to_charset = self::_GetCharsetByName($to_charset);
 		if($from_charset==$to_charset){
@@ -140,9 +140,9 @@ class Translate{
 	/**
 	 * @ignore
 	 */
-	static function _Trans($text,$from_charset,$to_charset,$options = array()){
+	static function _Trans($text,$from_charset,$to_charset,$options = []){
 		if(is_array($text)){
-			$out = array();
+			$out = [];
 			foreach($text as $key => $value){
 				$_key = $key;
 				if(isset($options["recode_array_keys"]) && $options["recode_array_keys"]){
@@ -194,12 +194,12 @@ class Translate{
 	 * @ignore
 	 */
 	static function _RemoveUtf8Headaches($text){
-		$out = strtr($text,array(
+		$out = strtr($text,[
 			chr(0xE2).chr(0x80).chr(0x93) => "-", // en-dash U+2013
 			chr(0xE2).chr(0x80).chr(0x94) => "-", // em-dash U+2014
 			chr(0xC2).chr(0xA0) => " ", // No-Break Space U+00A0
 			chr(0xC2).chr(0x85) => "\n", // Next Line U+0085
-		));
+		]);
 		$out = str_replace(self::$WHITE_CHARACTERS,array_fill(0,count(self::$WHITE_CHARACTERS)," "),$out);
 		$out = str_replace(self::$INVISIBLE_CHARACTERS,array_fill(0,count(self::$INVISIBLE_CHARACTERS),""),$out);
 
@@ -214,7 +214,7 @@ class Translate{
 			require(__DIR__ . "/tr_tables/transliteration/tr_table.php");
 
 			// the original array for transliteration
-			$tr_table = array(
+			$tr_table = [
 				// Cyrillic Transliteration Table
 				// http://homes.chass.utoronto.ca/~tarn/courses/translit-table.html
 				"А" => "A",
@@ -310,10 +310,10 @@ class Translate{
 				"Ľ" => "L",
 				"ĺ" => "l",
 				"Ĺ" => "L" 
-			) + $tr_table;
+			] + $tr_table;
 
 			// Symbols, specials
-			$tr_table += array(
+			$tr_table += [
 				'’' => "'",
 				'„' => '"',
 				'“' => '"',
@@ -330,16 +330,16 @@ class Translate{
 				"½" => "1/2",
 				"¾" => "3/4",
 				"…" => "...", // hellip
-			) + $tr_table;
+			] + $tr_table;
 
 		}
 		return strtr($text,$tr_table);
 	}
 
-	static function _RemoveUtf8Chars($text,$options = array()){
-		$options += array(
+	static function _RemoveUtf8Chars($text,$options = []){
+		$options += [
 			"unknown" => "?",
-		);
+		];
 
 		$chars = preg_split('//u',$text);
 		foreach($chars as &$char){
@@ -359,7 +359,7 @@ class Translate{
 	 */
 	static function Lower($text,$charset = null){
 		$text = (string)$text;
-		static $TR_TABLES = array();
+		static $TR_TABLES = [];
 
 		$charset = self::_GetCharsetByName($charset);
 		switch($charset){
@@ -388,7 +388,7 @@ class Translate{
 	 * @return string
 	 */
 	static function Upper($text,$charset = null){
-		static $TR_TABLES = array();
+		static $TR_TABLES = [];
 
 		$text = (string)$text;
 		$charset = self::_GetCharsetByName($charset);
@@ -420,7 +420,7 @@ class Translate{
 	static function _GetCharsetByName($charset){
 		if(!$charset){ $charset = defined("DEFAULT_CHARSET") ? DEFAULT_CHARSET : "utf8"; }
 
-        static $trans=array( 	  
+        static $trans=[ 	  
               "8859_2" => "iso-8859-2",
               "iso8859-2" => "iso-8859-2",
               "iso_8859-2:1987" => "iso-8859-2",
@@ -470,7 +470,7 @@ class Translate{
               
               "ibm-852" => "852",
               "ibm852" => "852",
-              );
+              ];
 	  
 	  $charset=strtolower(trim($charset));
 	  if(array_key_exists($charset,$trans))
@@ -484,12 +484,12 @@ class Translate{
 	static function _TO_HTML_entitites(&$text,$from_cp){
 		switch($from_cp){
 			case "windows-1250":
-				$_z = array(chr(138),chr(140),chr(141),chr(142),chr(143),chr(154),chr(156),chr(157),chr(158),chr(159),chr(160),chr(161),chr(162),chr(163),chr(164),chr(165),chr(166),chr(167),chr(168),chr(169),chr(170),chr(171),chr(172),chr(173),chr(174),chr(175),chr(176),chr(177),chr(178),chr(179),chr(180),chr(181),chr(183),chr(184),chr(185),chr(186),chr(187),chr(188),chr(189),chr(190),chr(191),chr(192),chr(193),chr(194),chr(195),chr(196),chr(197),chr(198),chr(199),chr(200),chr(201),chr(202),chr(203),chr(204),chr(205),chr(206),chr(207),chr(208),chr(209),chr(210),chr(211),chr(212),chr(213),chr(214),chr(215),chr(216),chr(217),chr(218),chr(219),chr(220),chr(221),chr(222),chr(223),chr(224),chr(225),chr(226),chr(227),chr(228),chr(229),chr(230),chr(231),chr(232),chr(233),chr(234),chr(235),chr(236),chr(237),chr(238),chr(239),chr(240),chr(241),chr(242),chr(243),chr(244),chr(245),chr(246),chr(247),chr(248),chr(249),chr(250),chr(251),chr(252),chr(253),chr(254),chr(255));
-				$_do = array('&#352;','&#346;','&#356;','&#381;','&#377;','&#353;','&#347;','&#357;','&#382;','&#378;','&#160;','&#711;','&#728;','&#321;','&#164;','&#260;','&#166;','&#167;','&#168;','&#169;','&#350;','&#171;','&#172;','&#173;','&#174;','&#379;','&#176;','&#177;','&#731;','&#322;','&#180;','&#181;','&#729;','&#184;','&#261;','&#351;','&#187;','&#317;','&#733;','&#318;','&#380;','&#340;','&#193;','&#194;','&#258;','&#196;','&#313;','&#262;','&#199;','&#268;','&#201;','&#280;','&#203;','&#282;','&#205;','&#206;','&#270;','&#208;','&#323;','&#327;','&#211;','&#212;','&#336;','&#214;','&#215;','&#344;','&#366;','&#218;','&#368;','&#220;','&#221;','&#354;','&#223;','&#341;','&#225;','&#226;','&#259;','&#228;','&#314;','&#263;','&#231;','&#269;','&#233;','&#281;','&#235;','&#283;','&#237;','&#238;','&#271;','&#240;','&#324;','&#328;','&#243;','&#244;','&#337;','&#246;','&#247;','&#345;','&#367;','&#250;','&#369;','&#252;','&#253;','&#355;','&#729;');
+				$_z = [chr(138),chr(140),chr(141),chr(142),chr(143),chr(154),chr(156),chr(157),chr(158),chr(159),chr(160),chr(161),chr(162),chr(163),chr(164),chr(165),chr(166),chr(167),chr(168),chr(169),chr(170),chr(171),chr(172),chr(173),chr(174),chr(175),chr(176),chr(177),chr(178),chr(179),chr(180),chr(181),chr(183),chr(184),chr(185),chr(186),chr(187),chr(188),chr(189),chr(190),chr(191),chr(192),chr(193),chr(194),chr(195),chr(196),chr(197),chr(198),chr(199),chr(200),chr(201),chr(202),chr(203),chr(204),chr(205),chr(206),chr(207),chr(208),chr(209),chr(210),chr(211),chr(212),chr(213),chr(214),chr(215),chr(216),chr(217),chr(218),chr(219),chr(220),chr(221),chr(222),chr(223),chr(224),chr(225),chr(226),chr(227),chr(228),chr(229),chr(230),chr(231),chr(232),chr(233),chr(234),chr(235),chr(236),chr(237),chr(238),chr(239),chr(240),chr(241),chr(242),chr(243),chr(244),chr(245),chr(246),chr(247),chr(248),chr(249),chr(250),chr(251),chr(252),chr(253),chr(254),chr(255)];
+				$_do = ['&#352;','&#346;','&#356;','&#381;','&#377;','&#353;','&#347;','&#357;','&#382;','&#378;','&#160;','&#711;','&#728;','&#321;','&#164;','&#260;','&#166;','&#167;','&#168;','&#169;','&#350;','&#171;','&#172;','&#173;','&#174;','&#379;','&#176;','&#177;','&#731;','&#322;','&#180;','&#181;','&#729;','&#184;','&#261;','&#351;','&#187;','&#317;','&#733;','&#318;','&#380;','&#340;','&#193;','&#194;','&#258;','&#196;','&#313;','&#262;','&#199;','&#268;','&#201;','&#280;','&#203;','&#282;','&#205;','&#206;','&#270;','&#208;','&#323;','&#327;','&#211;','&#212;','&#336;','&#214;','&#215;','&#344;','&#366;','&#218;','&#368;','&#220;','&#221;','&#354;','&#223;','&#341;','&#225;','&#226;','&#259;','&#228;','&#314;','&#263;','&#231;','&#269;','&#233;','&#281;','&#235;','&#283;','&#237;','&#238;','&#271;','&#240;','&#324;','&#328;','&#243;','&#244;','&#337;','&#246;','&#247;','&#345;','&#367;','&#250;','&#369;','&#252;','&#253;','&#355;','&#729;'];
 				return str_replace($_z,$_do,$text);
 			case "iso-8859-2":
-				$_z = array(chr(160),chr(161),chr(162),chr(163),chr(164),chr(165),chr(166),chr(167),chr(168),chr(169),chr(170),chr(171),chr(172),chr(173),chr(174),chr(175),chr(176),chr(177),chr(178),chr(179),chr(180),chr(181),chr(182),chr(183),chr(184),chr(185),chr(186),chr(187),chr(188),chr(189),chr(190),chr(191),chr(192),chr(193),chr(194),chr(195),chr(196),chr(197),chr(198),chr(199),chr(200),chr(201),chr(202),chr(203),chr(204),chr(205),chr(206),chr(207),chr(208),chr(209),chr(210),chr(211),chr(212),chr(213),chr(214),chr(215),chr(216),chr(217),chr(218),chr(219),chr(220),chr(221),chr(222),chr(223),chr(224),chr(225),chr(226),chr(227),chr(228),chr(229),chr(230),chr(231),chr(232),chr(233),chr(234),chr(235),chr(236),chr(237),chr(238),chr(239),chr(240),chr(241),chr(242),chr(243),chr(244),chr(245),chr(246),chr(247),chr(248),chr(249),chr(250),chr(251),chr(252),chr(253),chr(254),chr(255));
-				$_do = array('&#160;','&#260;','&#728;','&#321;','&#164;','&#317;','&#346;','&#167;','&#168;','&#352;','&#350;','&#356;','&#377;','&#173;','&#381;','&#379;','&#176;','&#261;','&#731;','&#322;','&#180;','&#318;','&#347;','&#711;','&#184;','&#353;','&#351;','&#357;','&#378;','&#733;','&#382;','&#380;','&#340;','&#193;','&#194;','&#258;','&#196;','&#313;','&#262;','&#199;','&#268;','&#201;','&#280;','&#203;','&#282;','&#205;','&#206;','&#270;','&#208;','&#323;','&#327;','&#211;','&#212;','&#336;','&#214;','&#215;','&#344;','&#366;','&#218;','&#368;','&#220;','&#221;','&#354;','&#223;','&#341;','&#225;','&#226;','&#259;','&#228;','&#314;','&#263;','&#231;','&#269;','&#233;','&#281;','&#235;','&#283;','&#237;','&#238;','&#271;','&#240;','&#324;','&#328;','&#243;','&#244;','&#337;','&#246;','&#247;','&#345;','&#367;','&#250;','&#369;','&#252;','&#253;','&#355;','&#729;');
+				$_z = [chr(160),chr(161),chr(162),chr(163),chr(164),chr(165),chr(166),chr(167),chr(168),chr(169),chr(170),chr(171),chr(172),chr(173),chr(174),chr(175),chr(176),chr(177),chr(178),chr(179),chr(180),chr(181),chr(182),chr(183),chr(184),chr(185),chr(186),chr(187),chr(188),chr(189),chr(190),chr(191),chr(192),chr(193),chr(194),chr(195),chr(196),chr(197),chr(198),chr(199),chr(200),chr(201),chr(202),chr(203),chr(204),chr(205),chr(206),chr(207),chr(208),chr(209),chr(210),chr(211),chr(212),chr(213),chr(214),chr(215),chr(216),chr(217),chr(218),chr(219),chr(220),chr(221),chr(222),chr(223),chr(224),chr(225),chr(226),chr(227),chr(228),chr(229),chr(230),chr(231),chr(232),chr(233),chr(234),chr(235),chr(236),chr(237),chr(238),chr(239),chr(240),chr(241),chr(242),chr(243),chr(244),chr(245),chr(246),chr(247),chr(248),chr(249),chr(250),chr(251),chr(252),chr(253),chr(254),chr(255)];
+				$_do = ['&#160;','&#260;','&#728;','&#321;','&#164;','&#317;','&#346;','&#167;','&#168;','&#352;','&#350;','&#356;','&#377;','&#173;','&#381;','&#379;','&#176;','&#261;','&#731;','&#322;','&#180;','&#318;','&#347;','&#711;','&#184;','&#353;','&#351;','&#357;','&#378;','&#733;','&#382;','&#380;','&#340;','&#193;','&#194;','&#258;','&#196;','&#313;','&#262;','&#199;','&#268;','&#201;','&#280;','&#203;','&#282;','&#205;','&#206;','&#270;','&#208;','&#323;','&#327;','&#211;','&#212;','&#336;','&#214;','&#215;','&#344;','&#366;','&#218;','&#368;','&#220;','&#221;','&#354;','&#223;','&#341;','&#225;','&#226;','&#259;','&#228;','&#314;','&#263;','&#231;','&#269;','&#233;','&#281;','&#235;','&#283;','&#237;','&#238;','&#271;','&#240;','&#324;','&#328;','&#243;','&#244;','&#337;','&#246;','&#247;','&#345;','&#367;','&#250;','&#369;','&#252;','&#253;','&#355;','&#729;'];
 				return str_replace($_z,$_do,$text);
 			default:
 				return $text;
@@ -500,7 +500,7 @@ class Translate{
 	 * @ignore
 	 */
 	static function _TO_iso_8859_2(&$text,$from_cp){
-		static $TR_TABLES = array();
+		static $TR_TABLES = [];
 
 		switch($from_cp){
 			case "windows-1250":
@@ -525,16 +525,16 @@ class Translate{
 				return strtr($text, $TR_TABLES["$_cp"]);
 				break;
 			case "HTML entities":
-				$_do = array(chr(160),chr(161),chr(162),chr(163),chr(164),chr(165),chr(166),chr(167),chr(168),chr(169),chr(170),chr(171),chr(172),chr(173),chr(174),chr(175),chr(176),chr(177),chr(178),chr(179),chr(180),chr(181),chr(182),chr(183),chr(184),chr(185),chr(186),chr(187),chr(188),chr(189),chr(190),chr(191),chr(192),chr(193),chr(194),chr(195),chr(196),chr(197),chr(198),chr(199),chr(200),chr(201),chr(202),chr(203),chr(204),chr(205),chr(206),chr(207),chr(208),chr(209),chr(210),chr(211),chr(212),chr(213),chr(214),chr(215),chr(216),chr(217),chr(218),chr(219),chr(220),chr(221),chr(222),chr(223),chr(224),chr(225),chr(226),chr(227),chr(228),chr(229),chr(230),chr(231),chr(232),chr(233),chr(234),chr(235),chr(236),chr(237),chr(238),chr(239),chr(240),chr(241),chr(242),chr(243),chr(244),chr(245),chr(246),chr(247),chr(248),chr(249),chr(250),chr(251),chr(252),chr(253),chr(254),chr(255));
+				$_do = [chr(160),chr(161),chr(162),chr(163),chr(164),chr(165),chr(166),chr(167),chr(168),chr(169),chr(170),chr(171),chr(172),chr(173),chr(174),chr(175),chr(176),chr(177),chr(178),chr(179),chr(180),chr(181),chr(182),chr(183),chr(184),chr(185),chr(186),chr(187),chr(188),chr(189),chr(190),chr(191),chr(192),chr(193),chr(194),chr(195),chr(196),chr(197),chr(198),chr(199),chr(200),chr(201),chr(202),chr(203),chr(204),chr(205),chr(206),chr(207),chr(208),chr(209),chr(210),chr(211),chr(212),chr(213),chr(214),chr(215),chr(216),chr(217),chr(218),chr(219),chr(220),chr(221),chr(222),chr(223),chr(224),chr(225),chr(226),chr(227),chr(228),chr(229),chr(230),chr(231),chr(232),chr(233),chr(234),chr(235),chr(236),chr(237),chr(238),chr(239),chr(240),chr(241),chr(242),chr(243),chr(244),chr(245),chr(246),chr(247),chr(248),chr(249),chr(250),chr(251),chr(252),chr(253),chr(254),chr(255)];
 				//preklad s decimalnich kodu
-				$_z = array('&#160;','&#260;','&#728;','&#321;','&#164;','&#317;','&#346;','&#167;','&#168;','&#352;','&#350;','&#356;','&#377;','&#173;','&#381;','&#379;','&#176;','&#261;','&#731;','&#322;','&#180;','&#318;','&#347;','&#711;','&#184;','&#353;','&#351;','&#357;','&#378;','&#733;','&#382;','&#380;','&#340;','&#193;','&#194;','&#258;','&#196;','&#313;','&#262;','&#199;','&#268;','&#201;','&#280;','&#203;','&#282;','&#205;','&#206;','&#270;','&#208;','&#323;','&#327;','&#211;','&#212;','&#336;','&#214;','&#215;','&#344;','&#366;','&#218;','&#368;','&#220;','&#221;','&#354;','&#223;','&#341;','&#225;','&#226;','&#259;','&#228;','&#314;','&#263;','&#231;','&#269;','&#233;','&#281;','&#235;','&#283;','&#237;','&#238;','&#271;','&#240;','&#324;','&#328;','&#243;','&#244;','&#337;','&#246;','&#247;','&#345;','&#367;','&#250;','&#369;','&#252;','&#253;','&#355;','&#729;');
+				$_z = ['&#160;','&#260;','&#728;','&#321;','&#164;','&#317;','&#346;','&#167;','&#168;','&#352;','&#350;','&#356;','&#377;','&#173;','&#381;','&#379;','&#176;','&#261;','&#731;','&#322;','&#180;','&#318;','&#347;','&#711;','&#184;','&#353;','&#351;','&#357;','&#378;','&#733;','&#382;','&#380;','&#340;','&#193;','&#194;','&#258;','&#196;','&#313;','&#262;','&#199;','&#268;','&#201;','&#280;','&#203;','&#282;','&#205;','&#206;','&#270;','&#208;','&#323;','&#327;','&#211;','&#212;','&#336;','&#214;','&#215;','&#344;','&#366;','&#218;','&#368;','&#220;','&#221;','&#354;','&#223;','&#341;','&#225;','&#226;','&#259;','&#228;','&#314;','&#263;','&#231;','&#269;','&#233;','&#281;','&#235;','&#283;','&#237;','&#238;','&#271;','&#240;','&#324;','&#328;','&#243;','&#244;','&#337;','&#246;','&#247;','&#345;','&#367;','&#250;','&#369;','&#252;','&#253;','&#355;','&#729;'];
 				$text = str_replace($_z,$_do,$text);
 				//preklad z hexa kodu
-				$_z = array('&#xA0;','&#x104;','&#x2D8;','&#x141;','&#xA4;','&#x13D;','&#x15A;','&#xA7;','&#xA8;','&#x160;','&#x15E;','&#x164;','&#x179;','&#xAD;','&#x17D;','&#x17B;','&#xB0;','&#x105;','&#x2DB;','&#x142;','&#xB4;','&#x13E;','&#x15B;','&#x2C7;','&#xB8;','&#x161;','&#x15F;','&#x165;','&#x17A;','&#x2DD;','&#x17E;','&#x17C;','&#x154;','&#xC1;','&#xC2;','&#x102;','&#xC4;','&#x139;','&#x106;','&#xC7;','&#x10C;','&#xC9;','&#x118;','&#xCB;','&#x11A;','&#xCD;','&#xCE;','&#x10E;','&#xD0;','&#x143;','&#x147;','&#xD3;','&#xD4;','&#x150;','&#xD6;','&#xD7;','&#x158;','&#x16E;','&#xDA;','&#x170;','&#xDC;','&#xDD;','&#x162;','&#xDF;','&#x155;','&#xE1;','&#xE2;','&#x103;','&#xE4;','&#x13A;','&#x107;','&#xE7;','&#x10D;','&#xE9;','&#x119;','&#xEB;','&#x11B;','&#xED;','&#xEE;','&#x10F;','&#xF0;','&#x144;','&#x148;','&#xF3;','&#xF4;','&#x151;','&#xF6;','&#xF7;','&#x159;','&#x16F;','&#xFA;','&#x171;','&#xFC;','&#xFD;','&#x163;','&#x2D9;');
+				$_z = ['&#xA0;','&#x104;','&#x2D8;','&#x141;','&#xA4;','&#x13D;','&#x15A;','&#xA7;','&#xA8;','&#x160;','&#x15E;','&#x164;','&#x179;','&#xAD;','&#x17D;','&#x17B;','&#xB0;','&#x105;','&#x2DB;','&#x142;','&#xB4;','&#x13E;','&#x15B;','&#x2C7;','&#xB8;','&#x161;','&#x15F;','&#x165;','&#x17A;','&#x2DD;','&#x17E;','&#x17C;','&#x154;','&#xC1;','&#xC2;','&#x102;','&#xC4;','&#x139;','&#x106;','&#xC7;','&#x10C;','&#xC9;','&#x118;','&#xCB;','&#x11A;','&#xCD;','&#xCE;','&#x10E;','&#xD0;','&#x143;','&#x147;','&#xD3;','&#xD4;','&#x150;','&#xD6;','&#xD7;','&#x158;','&#x16E;','&#xDA;','&#x170;','&#xDC;','&#xDD;','&#x162;','&#xDF;','&#x155;','&#xE1;','&#xE2;','&#x103;','&#xE4;','&#x13A;','&#x107;','&#xE7;','&#x10D;','&#xE9;','&#x119;','&#xEB;','&#x11B;','&#xED;','&#xEE;','&#x10F;','&#xF0;','&#x144;','&#x148;','&#xF3;','&#xF4;','&#x151;','&#xF6;','&#xF7;','&#x159;','&#x16F;','&#xFA;','&#x171;','&#xFC;','&#xFD;','&#x163;','&#x2D9;'];
 				$text = str_replace($_z,$_do,$text);
 				//preklad z html entit
-				$_do = array(chr(32),chr(33),chr(34),chr(35),chr(36),chr(37),chr(38),chr(39),chr(40),chr(41),chr(42),chr(43),chr(44),chr(45),chr(46),chr(47),chr(58),chr(59),chr(60),chr(61),chr(62),chr(63),chr(64),chr(91),chr(92),chr(93),chr(94),chr(95),chr(96),chr(123),chr(124),chr(125),chr(126),chr(160),chr(161),chr(162),chr(163),chr(164),chr(165),chr(166),chr(167),chr(168),chr(169),chr(170),chr(171),chr(172),chr(173),chr(174),chr(175),chr(176),chr(177),chr(178),chr(179),chr(180),chr(181),chr(182),chr(183),chr(184),chr(185),chr(186),chr(187),chr(188),chr(189),chr(190),chr(191),chr(192),chr(193),chr(194),chr(195),chr(196),chr(197),chr(198),chr(199),chr(200),chr(201),chr(202),chr(203),chr(204),chr(205),chr(206),chr(207),chr(208),chr(209),chr(210),chr(211),chr(212),chr(213),chr(214),chr(215),chr(216),chr(217),chr(218),chr(219),chr(220),chr(221),chr(222),chr(223),chr(224),chr(225),chr(226),chr(227),chr(228),chr(229),chr(230),chr(231),chr(232),chr(233),chr(234),chr(235),chr(236),chr(237),chr(238),chr(239),chr(240),chr(241),chr(242),chr(243),chr(244),chr(245),chr(246),chr(247),chr(248),chr(249),chr(250),chr(251),chr(252),chr(253),chr(254),chr(255));
-				$_z = array('&space;','&exclam;','&quotedbl;','&numbersign;','&dollar;','&percent;','&ampersand;','&quoteright;','&parenleft;','&parenright;','&asterisk;','&plus;','&comma;','&minus;','&period;','&slash;','&colon;','&semicolon;','&less;','&equal;','&greater;','&question;','&at;','&bracketleft;','&backslash;','&bracketright;','&asciicircum;','&underscore;','&quoteleft;','&braceleft;','&bar;','&braceright;','&asciitilde;','&nobreakspace;','&Aogonek;','&breve;','&Lstroke;','&currency;','&Lcaron;','&Sacute;','&section;','&diaeresis;','&Scaron;','&Scedilla;','&Tcaron;','&Zacute;','&hyphen;','&Zcaron;','&Zabovedot;','&degree;','&aogonek;','&ogonek;','&lstroke;','&acute;','&lcaron;','&sacute;','&caron;','&cedilla;','&scaron;','&scedilla;','&tcaron;','&zacute;','&doubleacute;','&zcaron;','&zabovedot;','&Racute;','&Aacute;','&Acircumflex;','&Abreve;','&Adiaeresis;','&Lacute;','&Cacute;','&Ccedilla;','&Ccaron;','&Eacute;','&Eogonek;','&Ediaeresis;','&Ecaron;','&Iacute;','&Icircumflex;','&Dcaron;','&Eth;','&Nacute;','&Ncaron;','&Oacute;','&Ocircumflex;','&Odoubleacute;','&Odiaeresis;','&multiply;','&Rcaron;','&Uring;','&Uacute;','&Udoubleacute;','&Udiaeresis;','&Yacute;','&Tcedilla;','&ssharp;','&racute;','&aacute;','&acircumflex;','&abreve;','&adiaeresis;','&lacute;','&cacute;','&ccedilla;','&ccaron;','&eacute;','&eogonek;','&ediaeresis;','&ecaron;','&iacute;','&icircumflex;','&dcaron;','&eth;','&nacute;','&ncaron;','&oacute;','&ocircumflex;','&odoubleacute;','&odiaeresis;','&division;','&rcaron;','&uring;','&uacute;','&udoubleacute;','&udiaeresis;','&yacute;','&tcedilla;','&abovedot;');
+				$_do = [chr(32),chr(33),chr(34),chr(35),chr(36),chr(37),chr(38),chr(39),chr(40),chr(41),chr(42),chr(43),chr(44),chr(45),chr(46),chr(47),chr(58),chr(59),chr(60),chr(61),chr(62),chr(63),chr(64),chr(91),chr(92),chr(93),chr(94),chr(95),chr(96),chr(123),chr(124),chr(125),chr(126),chr(160),chr(161),chr(162),chr(163),chr(164),chr(165),chr(166),chr(167),chr(168),chr(169),chr(170),chr(171),chr(172),chr(173),chr(174),chr(175),chr(176),chr(177),chr(178),chr(179),chr(180),chr(181),chr(182),chr(183),chr(184),chr(185),chr(186),chr(187),chr(188),chr(189),chr(190),chr(191),chr(192),chr(193),chr(194),chr(195),chr(196),chr(197),chr(198),chr(199),chr(200),chr(201),chr(202),chr(203),chr(204),chr(205),chr(206),chr(207),chr(208),chr(209),chr(210),chr(211),chr(212),chr(213),chr(214),chr(215),chr(216),chr(217),chr(218),chr(219),chr(220),chr(221),chr(222),chr(223),chr(224),chr(225),chr(226),chr(227),chr(228),chr(229),chr(230),chr(231),chr(232),chr(233),chr(234),chr(235),chr(236),chr(237),chr(238),chr(239),chr(240),chr(241),chr(242),chr(243),chr(244),chr(245),chr(246),chr(247),chr(248),chr(249),chr(250),chr(251),chr(252),chr(253),chr(254),chr(255)];
+				$_z = ['&space;','&exclam;','&quotedbl;','&numbersign;','&dollar;','&percent;','&ampersand;','&quoteright;','&parenleft;','&parenright;','&asterisk;','&plus;','&comma;','&minus;','&period;','&slash;','&colon;','&semicolon;','&less;','&equal;','&greater;','&question;','&at;','&bracketleft;','&backslash;','&bracketright;','&asciicircum;','&underscore;','&quoteleft;','&braceleft;','&bar;','&braceright;','&asciitilde;','&nobreakspace;','&Aogonek;','&breve;','&Lstroke;','&currency;','&Lcaron;','&Sacute;','&section;','&diaeresis;','&Scaron;','&Scedilla;','&Tcaron;','&Zacute;','&hyphen;','&Zcaron;','&Zabovedot;','&degree;','&aogonek;','&ogonek;','&lstroke;','&acute;','&lcaron;','&sacute;','&caron;','&cedilla;','&scaron;','&scedilla;','&tcaron;','&zacute;','&doubleacute;','&zcaron;','&zabovedot;','&Racute;','&Aacute;','&Acircumflex;','&Abreve;','&Adiaeresis;','&Lacute;','&Cacute;','&Ccedilla;','&Ccaron;','&Eacute;','&Eogonek;','&Ediaeresis;','&Ecaron;','&Iacute;','&Icircumflex;','&Dcaron;','&Eth;','&Nacute;','&Ncaron;','&Oacute;','&Ocircumflex;','&Odoubleacute;','&Odiaeresis;','&multiply;','&Rcaron;','&Uring;','&Uacute;','&Udoubleacute;','&Udiaeresis;','&Yacute;','&Tcedilla;','&ssharp;','&racute;','&aacute;','&acircumflex;','&abreve;','&adiaeresis;','&lacute;','&cacute;','&ccedilla;','&ccaron;','&eacute;','&eogonek;','&ediaeresis;','&ecaron;','&iacute;','&icircumflex;','&dcaron;','&eth;','&nacute;','&ncaron;','&oacute;','&ocircumflex;','&odoubleacute;','&odiaeresis;','&division;','&rcaron;','&uring;','&uacute;','&udoubleacute;','&udiaeresis;','&yacute;','&tcedilla;','&abovedot;'];
 				$text = str_replace($_z,$_do,$text);
 				return $text;
 				break;
@@ -550,7 +550,7 @@ class Translate{
 	 * @ignore
 	 */
 	static function _TO_windows_1250(&$text,$from_cp){
-		static $TR_TABLES = array();
+		static $TR_TABLES = [];
 
 		switch($from_cp){
 			case "iso-8859-1":
@@ -565,22 +565,22 @@ class Translate{
 				return strtr($text, $TR_TABLES["$_cp"]);
 				break;
 			case "HTML entities":
-				$_do = array(chr(138),chr(140),chr(141),chr(142),chr(143),chr(154),chr(156),chr(157),chr(158),chr(159),chr(160),chr(161),chr(162),chr(163),chr(164),chr(165),chr(166),chr(167),chr(168),chr(169),chr(170),chr(171),chr(172),chr(173),chr(174),chr(175),chr(176),chr(177),chr(178),chr(179),chr(180),chr(181),chr(183),chr(184),chr(185),chr(186),chr(187),chr(188),chr(189),chr(190),chr(191),chr(192),chr(193),chr(194),chr(195),chr(196),chr(197),chr(198),chr(199),chr(200),chr(201),chr(202),chr(203),chr(204),chr(205),chr(206),chr(207),chr(208),chr(209),chr(210),chr(211),chr(212),chr(213),chr(214),chr(215),chr(216),chr(217),chr(218),chr(219),chr(220),chr(221),chr(222),chr(223),chr(224),chr(225),chr(226),chr(227),chr(228),chr(229),chr(230),chr(231),chr(232),chr(233),chr(234),chr(235),chr(236),chr(237),chr(238),chr(239),chr(240),chr(241),chr(242),chr(243),chr(244),chr(245),chr(246),chr(247),chr(248),chr(249),chr(250),chr(251),chr(252),chr(253),chr(254),chr(255));
+				$_do = [chr(138),chr(140),chr(141),chr(142),chr(143),chr(154),chr(156),chr(157),chr(158),chr(159),chr(160),chr(161),chr(162),chr(163),chr(164),chr(165),chr(166),chr(167),chr(168),chr(169),chr(170),chr(171),chr(172),chr(173),chr(174),chr(175),chr(176),chr(177),chr(178),chr(179),chr(180),chr(181),chr(183),chr(184),chr(185),chr(186),chr(187),chr(188),chr(189),chr(190),chr(191),chr(192),chr(193),chr(194),chr(195),chr(196),chr(197),chr(198),chr(199),chr(200),chr(201),chr(202),chr(203),chr(204),chr(205),chr(206),chr(207),chr(208),chr(209),chr(210),chr(211),chr(212),chr(213),chr(214),chr(215),chr(216),chr(217),chr(218),chr(219),chr(220),chr(221),chr(222),chr(223),chr(224),chr(225),chr(226),chr(227),chr(228),chr(229),chr(230),chr(231),chr(232),chr(233),chr(234),chr(235),chr(236),chr(237),chr(238),chr(239),chr(240),chr(241),chr(242),chr(243),chr(244),chr(245),chr(246),chr(247),chr(248),chr(249),chr(250),chr(251),chr(252),chr(253),chr(254),chr(255)];
 				//preklad s decimalnich kodu
-				$_z = array('&#352;','&#346;','&#356;','&#381;','&#377;','&#353;','&#347;','&#357;','&#382;','&#378;','&#160;','&#711;','&#728;','&#321;','&#164;','&#260;','&#166;','&#167;','&#168;','&#169;','&#350;','&#171;','&#172;','&#173;','&#174;','&#379;','&#176;','&#177;','&#731;','&#322;','&#180;','&#181;','&#729;','&#184;','&#261;','&#351;','&#187;','&#317;','&#733;','&#318;','&#380;','&#340;','&#193;','&#194;','&#258;','&#196;','&#313;','&#262;','&#199;','&#268;','&#201;','&#280;','&#203;','&#282;','&#205;','&#206;','&#270;','&#208;','&#323;','&#327;','&#211;','&#212;','&#336;','&#214;','&#215;','&#344;','&#366;','&#218;','&#368;','&#220;','&#221;','&#354;','&#223;','&#341;','&#225;','&#226;','&#259;','&#228;','&#314;','&#263;','&#231;','&#269;','&#233;','&#281;','&#235;','&#283;','&#237;','&#238;','&#271;','&#240;','&#324;','&#328;','&#243;','&#244;','&#337;','&#246;','&#247;','&#345;','&#367;','&#250;','&#369;','&#252;','&#253;','&#355;','&#729;');
+				$_z = ['&#352;','&#346;','&#356;','&#381;','&#377;','&#353;','&#347;','&#357;','&#382;','&#378;','&#160;','&#711;','&#728;','&#321;','&#164;','&#260;','&#166;','&#167;','&#168;','&#169;','&#350;','&#171;','&#172;','&#173;','&#174;','&#379;','&#176;','&#177;','&#731;','&#322;','&#180;','&#181;','&#729;','&#184;','&#261;','&#351;','&#187;','&#317;','&#733;','&#318;','&#380;','&#340;','&#193;','&#194;','&#258;','&#196;','&#313;','&#262;','&#199;','&#268;','&#201;','&#280;','&#203;','&#282;','&#205;','&#206;','&#270;','&#208;','&#323;','&#327;','&#211;','&#212;','&#336;','&#214;','&#215;','&#344;','&#366;','&#218;','&#368;','&#220;','&#221;','&#354;','&#223;','&#341;','&#225;','&#226;','&#259;','&#228;','&#314;','&#263;','&#231;','&#269;','&#233;','&#281;','&#235;','&#283;','&#237;','&#238;','&#271;','&#240;','&#324;','&#328;','&#243;','&#244;','&#337;','&#246;','&#247;','&#345;','&#367;','&#250;','&#369;','&#252;','&#253;','&#355;','&#729;'];
 				$text = str_replace($_z,$_do,$text);
 				//preklad z hexa kodu
-				$_z = array('&#x160;','&#x15A;','&#x164;','&#x17D;','&#x179;','&#x161;','&#x15B;','&#x165;','&#x17E;','&#x17A;','&#xA0;','&#x2C7;','&#x2D8;','&#x141;','&#xA4;','&#x104;','&#xA6;','&#xA7;','&#xA8;','&#xA9;','&#x15E;','&#xAB;','&#xAC;','&#xAD;','&#xAE;','&#x17B;','&#xB0;','&#xB1;','&#x2DB;','&#x142;','&#xB4;','&#xB5;','&#x2D9;','&#xB8;','&#x105;','&#x15F;','&#xBB;','&#x13D;','&#x2DD;','&#x13E;','&#x17C;','&#x154;','&#xC1;','&#xC2;','&#x102;','&#xC4;','&#x139;','&#x106;','&#xC7;','&#x10C;','&#xC9;','&#x118;','&#xCB;','&#x11A;','&#xCD;','&#xCE;','&#x10E;','&#xD0;','&#x143;','&#x147;','&#xD3;','&#xD4;','&#x150;','&#xD6;','&#xD7;','&#x158;','&#x16E;','&#xDA;','&#x170;','&#xDC;','&#xDD;','&#x162;','&#xDF;','&#x155;','&#xE1;','&#xE2;','&#x103;','&#xE4;','&#x13A;','&#x107;','&#xE7;','&#x10D;','&#xE9;','&#x119;','&#xEB;','&#x11B;','&#xED;','&#xEE;','&#x10F;','&#xF0;','&#x144;','&#x148;','&#xF3;','&#xF4;','&#x151;','&#xF6;','&#xF7;','&#x159;','&#x16F;','&#xFA;','&#x171;','&#xFC;','&#xFD;','&#x163;','&#x2D9;');
+				$_z = ['&#x160;','&#x15A;','&#x164;','&#x17D;','&#x179;','&#x161;','&#x15B;','&#x165;','&#x17E;','&#x17A;','&#xA0;','&#x2C7;','&#x2D8;','&#x141;','&#xA4;','&#x104;','&#xA6;','&#xA7;','&#xA8;','&#xA9;','&#x15E;','&#xAB;','&#xAC;','&#xAD;','&#xAE;','&#x17B;','&#xB0;','&#xB1;','&#x2DB;','&#x142;','&#xB4;','&#xB5;','&#x2D9;','&#xB8;','&#x105;','&#x15F;','&#xBB;','&#x13D;','&#x2DD;','&#x13E;','&#x17C;','&#x154;','&#xC1;','&#xC2;','&#x102;','&#xC4;','&#x139;','&#x106;','&#xC7;','&#x10C;','&#xC9;','&#x118;','&#xCB;','&#x11A;','&#xCD;','&#xCE;','&#x10E;','&#xD0;','&#x143;','&#x147;','&#xD3;','&#xD4;','&#x150;','&#xD6;','&#xD7;','&#x158;','&#x16E;','&#xDA;','&#x170;','&#xDC;','&#xDD;','&#x162;','&#xDF;','&#x155;','&#xE1;','&#xE2;','&#x103;','&#xE4;','&#x13A;','&#x107;','&#xE7;','&#x10D;','&#xE9;','&#x119;','&#xEB;','&#x11B;','&#xED;','&#xEE;','&#x10F;','&#xF0;','&#x144;','&#x148;','&#xF3;','&#xF4;','&#x151;','&#xF6;','&#xF7;','&#x159;','&#x16F;','&#xFA;','&#x171;','&#xFC;','&#xFD;','&#x163;','&#x2D9;'];
 				$text = str_replace($_z,$_do,$text);
 				//preklad z html entit
-				$_do = array(chr(32),chr(33),chr(34),chr(35),chr(36),chr(37),chr(38),chr(39),chr(40),chr(41),chr(42),chr(43),chr(44),chr(45),chr(46),chr(47),chr(58),chr(59),chr(60),chr(61),chr(62),chr(63),chr(64),chr(91),chr(92),chr(93),chr(94),chr(95),chr(96),chr(123),chr(124),chr(125),chr(126),chr(130),chr(132),chr(133),chr(134),chr(135),chr(137),chr(138),chr(139),chr(140),chr(141),chr(142),chr(143),chr(145),chr(146),chr(147),chr(148),chr(149),chr(150),chr(151),chr(153),chr(154),chr(155),chr(156),chr(157),chr(158),chr(159),chr(160),chr(161),chr(162),chr(163),chr(164),chr(165),chr(166),chr(167),chr(168),chr(169),chr(170),chr(171),chr(172),chr(173),chr(175),chr(174),chr(176),chr(177),chr(178),chr(179),chr(180),chr(181),chr(183),chr(184),chr(185),chr(186),chr(187),chr(188),chr(189),chr(190),chr(191),chr(192),chr(193),chr(194),chr(195),chr(196),chr(197),chr(198),chr(199),chr(200),chr(201),chr(202),chr(203),chr(204),chr(205),chr(206),chr(207),chr(208),chr(209),chr(210),chr(211),chr(212),chr(213),chr(214),chr(215),chr(216),chr(217),chr(218),chr(219),chr(220),chr(221),chr(222),chr(223),chr(224),chr(225),chr(226),chr(227),chr(228),chr(229),chr(230),chr(231),chr(232),chr(233),chr(234),chr(235),chr(236),chr(237),chr(238),chr(239),chr(240),chr(241),chr(242),chr(243),chr(244),chr(245),chr(246),chr(247),chr(248),chr(249),chr(250),chr(251),chr(252),chr(253),chr(254),chr(255));
-				$_z = array('&space;','&exclam;','&quotedbl;','&numbersign;','&dollar;','&percent;','&ampersand;','&quoteright;','&parenleft;','&parenright;','&asterisk;','&plus;','&comma;','&minus;','&period;','&slash;','&colon;','&semicolon;','&less;','&equal;','&greater;','&question;','&at;','&bracketleft;','&backslash;','&bracketright;','&asciicircum;','&underscore;','&quoteleft;','&braceleft;','&bar;','&braceright;','&asciitilde;','&quotelowsingle;','&quotelowdouble;','&period3;','&dagger;','&doubledagger;','&permille;','&Scaron;','&anglequoteleftsingle;','&Sacute;','&Tcaron;','&Zcaron;','&Zacute;','&quoteleft;','&quoteright;','&quoteleftdouble;','&quotedbl;','&bullet;','&endash;','&emdash;','&trademark;','&scaron;','&anglequoterightsingle;','&sacute;','&tcaron;','&zcaron;','&zacute;','&nobreakspace;','&caron;','&breve;','&Lstroke;','&currency;','&Aogonek;','&brokenbar;','&section;','&diaeresis;','&copyright;','&Scedilla;','&guillemotleft;','&notsign;','&hyphen;','&Zabovedot;','&registered;','&degree;','&plusminus;','&ogonek;','&lstroke;','&acute;','&mu;','&abovedot;','&cedilla;','&aogonek;','&scedilla;','&guillemotright;','&Lcaron;','&doubleacute;','&lcaron;','&zabovedot;','&Racute;','&Aacute;','&Acircumflex;','&Abreve;','&Adiaeresis;','&Lacute;','&Cacute;','&Ccedilla;','&Ccaron;','&Eacute;','&Eogonek;','&Ediaeresis;','&Ecaron;','&Iacute;','&Icircumflex;','&Dcaron;','&Eth;','&Nacute;','&Ncaron;','&Oacute;','&Ocircumflex;','&Odoubleacute;','&Odiaeresis;','&multiply;','&Rcaron;','&Uring;','&Uacute;','&Udoubleacute;','&Udiaeresis;','&Yacute;','&Tcedilla;','&ssharp;','&racute;','&aacute;','&acircumflex;','&abreve;','&adiaeresis;','&lacute;','&cacute;','&ccedilla;','&ccaron;','&eacute;','&eogonek;','&ediaeresis;','&ecaron;','&iacute;','&icircumflex;','&dcaron;','&eth;','&nacute;','&ncaron;','&oacute;','&ocircumflex;','&odoubleacute;','&odiaeresis;','&division;','&rcaron;','&uring;','&uacute;','&udoubleacute;','&udiaeresis;','&yacute;','&tcedilla;','&abovedot;');
+				$_do = [chr(32),chr(33),chr(34),chr(35),chr(36),chr(37),chr(38),chr(39),chr(40),chr(41),chr(42),chr(43),chr(44),chr(45),chr(46),chr(47),chr(58),chr(59),chr(60),chr(61),chr(62),chr(63),chr(64),chr(91),chr(92),chr(93),chr(94),chr(95),chr(96),chr(123),chr(124),chr(125),chr(126),chr(130),chr(132),chr(133),chr(134),chr(135),chr(137),chr(138),chr(139),chr(140),chr(141),chr(142),chr(143),chr(145),chr(146),chr(147),chr(148),chr(149),chr(150),chr(151),chr(153),chr(154),chr(155),chr(156),chr(157),chr(158),chr(159),chr(160),chr(161),chr(162),chr(163),chr(164),chr(165),chr(166),chr(167),chr(168),chr(169),chr(170),chr(171),chr(172),chr(173),chr(175),chr(174),chr(176),chr(177),chr(178),chr(179),chr(180),chr(181),chr(183),chr(184),chr(185),chr(186),chr(187),chr(188),chr(189),chr(190),chr(191),chr(192),chr(193),chr(194),chr(195),chr(196),chr(197),chr(198),chr(199),chr(200),chr(201),chr(202),chr(203),chr(204),chr(205),chr(206),chr(207),chr(208),chr(209),chr(210),chr(211),chr(212),chr(213),chr(214),chr(215),chr(216),chr(217),chr(218),chr(219),chr(220),chr(221),chr(222),chr(223),chr(224),chr(225),chr(226),chr(227),chr(228),chr(229),chr(230),chr(231),chr(232),chr(233),chr(234),chr(235),chr(236),chr(237),chr(238),chr(239),chr(240),chr(241),chr(242),chr(243),chr(244),chr(245),chr(246),chr(247),chr(248),chr(249),chr(250),chr(251),chr(252),chr(253),chr(254),chr(255)];
+				$_z = ['&space;','&exclam;','&quotedbl;','&numbersign;','&dollar;','&percent;','&ampersand;','&quoteright;','&parenleft;','&parenright;','&asterisk;','&plus;','&comma;','&minus;','&period;','&slash;','&colon;','&semicolon;','&less;','&equal;','&greater;','&question;','&at;','&bracketleft;','&backslash;','&bracketright;','&asciicircum;','&underscore;','&quoteleft;','&braceleft;','&bar;','&braceright;','&asciitilde;','&quotelowsingle;','&quotelowdouble;','&period3;','&dagger;','&doubledagger;','&permille;','&Scaron;','&anglequoteleftsingle;','&Sacute;','&Tcaron;','&Zcaron;','&Zacute;','&quoteleft;','&quoteright;','&quoteleftdouble;','&quotedbl;','&bullet;','&endash;','&emdash;','&trademark;','&scaron;','&anglequoterightsingle;','&sacute;','&tcaron;','&zcaron;','&zacute;','&nobreakspace;','&caron;','&breve;','&Lstroke;','&currency;','&Aogonek;','&brokenbar;','&section;','&diaeresis;','&copyright;','&Scedilla;','&guillemotleft;','&notsign;','&hyphen;','&Zabovedot;','&registered;','&degree;','&plusminus;','&ogonek;','&lstroke;','&acute;','&mu;','&abovedot;','&cedilla;','&aogonek;','&scedilla;','&guillemotright;','&Lcaron;','&doubleacute;','&lcaron;','&zabovedot;','&Racute;','&Aacute;','&Acircumflex;','&Abreve;','&Adiaeresis;','&Lacute;','&Cacute;','&Ccedilla;','&Ccaron;','&Eacute;','&Eogonek;','&Ediaeresis;','&Ecaron;','&Iacute;','&Icircumflex;','&Dcaron;','&Eth;','&Nacute;','&Ncaron;','&Oacute;','&Ocircumflex;','&Odoubleacute;','&Odiaeresis;','&multiply;','&Rcaron;','&Uring;','&Uacute;','&Udoubleacute;','&Udiaeresis;','&Yacute;','&Tcedilla;','&ssharp;','&racute;','&aacute;','&acircumflex;','&abreve;','&adiaeresis;','&lacute;','&cacute;','&ccedilla;','&ccaron;','&eacute;','&eogonek;','&ediaeresis;','&ecaron;','&iacute;','&icircumflex;','&dcaron;','&eth;','&nacute;','&ncaron;','&oacute;','&ocircumflex;','&odoubleacute;','&odiaeresis;','&division;','&rcaron;','&uring;','&uacute;','&udoubleacute;','&udiaeresis;','&yacute;','&tcedilla;','&abovedot;'];
 				$text = str_replace($_z,$_do,$text);
 				return $text;
 				break;
 			case "852":
-				$in = array(chr(128),chr(129),chr(130),chr(131),chr(132),chr(133),chr(134),chr(135),chr(136),chr(137),chr(138),chr(139),chr(140),chr(141),chr(142),chr(143),chr(144),chr(145),chr(146),chr(147),chr(148),chr(149),chr(150),chr(151),chr(152),chr(153),chr(154),chr(155),chr(156),chr(157),chr(158),chr(159),chr(160),chr(161),chr(162),chr(163),chr(164),chr(165),chr(166),chr(167),chr(168),chr(169),chr(170),chr(171),chr(172),chr(173),chr(174),chr(175),chr(181),chr(182),chr(183),chr(184),chr(189),chr(190),chr(198),chr(199),chr(207),chr(208),chr(209),chr(210),chr(211),chr(212),chr(213),chr(214),chr(215),chr(216),chr(221),chr(222),chr(224),chr(225),chr(226),chr(227),chr(228),chr(229),chr(230),chr(231),chr(232),chr(233),chr(234),chr(235),chr(236),chr(237),chr(238),chr(239),chr(240),chr(241),chr(242),chr(243),chr(244),chr(245),chr(246),chr(247),chr(248),chr(249),chr(250),chr(252),chr(253),chr(255));
-				$out = array(chr(199),chr(252),chr(233),chr(226),chr(228),chr(249),chr(230),chr(231),chr(179),chr(235),chr(213),chr(245),chr(238),chr(143),chr(196),chr(198),chr(201),chr(197),chr(229),chr(244),chr(246),chr(188),chr(190),chr(140),chr(156),chr(214),chr(220),chr(141),chr(157),chr(163),chr(215),chr(232),chr(225),chr(237),chr(243),chr(250),chr(165),chr(185),chr(142),chr(158),chr(202),chr(234),chr(172),chr(159),chr(200),chr(186),chr(171),chr(187),chr(193),chr(194),chr(204),chr(170),chr(175),chr(191),chr(195),chr(227),chr(164),chr(240),chr(208),chr(207),chr(203),chr(239),chr(210),chr(205),chr(206),chr(236),chr(222),chr(217),chr(211),chr(223),chr(212),chr(209),chr(241),chr(242),chr(138),chr(154),chr(192),chr(218),chr(224),chr(219),chr(253),chr(221),chr(254),chr(180),chr(173),chr(189),chr(178),chr(161),chr(162),chr(167),chr(247),chr(184),chr(176),chr(168),chr(255),chr(216),chr(248),chr(160));
+				$in = [chr(128),chr(129),chr(130),chr(131),chr(132),chr(133),chr(134),chr(135),chr(136),chr(137),chr(138),chr(139),chr(140),chr(141),chr(142),chr(143),chr(144),chr(145),chr(146),chr(147),chr(148),chr(149),chr(150),chr(151),chr(152),chr(153),chr(154),chr(155),chr(156),chr(157),chr(158),chr(159),chr(160),chr(161),chr(162),chr(163),chr(164),chr(165),chr(166),chr(167),chr(168),chr(169),chr(170),chr(171),chr(172),chr(173),chr(174),chr(175),chr(181),chr(182),chr(183),chr(184),chr(189),chr(190),chr(198),chr(199),chr(207),chr(208),chr(209),chr(210),chr(211),chr(212),chr(213),chr(214),chr(215),chr(216),chr(221),chr(222),chr(224),chr(225),chr(226),chr(227),chr(228),chr(229),chr(230),chr(231),chr(232),chr(233),chr(234),chr(235),chr(236),chr(237),chr(238),chr(239),chr(240),chr(241),chr(242),chr(243),chr(244),chr(245),chr(246),chr(247),chr(248),chr(249),chr(250),chr(252),chr(253),chr(255)];
+				$out = [chr(199),chr(252),chr(233),chr(226),chr(228),chr(249),chr(230),chr(231),chr(179),chr(235),chr(213),chr(245),chr(238),chr(143),chr(196),chr(198),chr(201),chr(197),chr(229),chr(244),chr(246),chr(188),chr(190),chr(140),chr(156),chr(214),chr(220),chr(141),chr(157),chr(163),chr(215),chr(232),chr(225),chr(237),chr(243),chr(250),chr(165),chr(185),chr(142),chr(158),chr(202),chr(234),chr(172),chr(159),chr(200),chr(186),chr(171),chr(187),chr(193),chr(194),chr(204),chr(170),chr(175),chr(191),chr(195),chr(227),chr(164),chr(240),chr(208),chr(207),chr(203),chr(239),chr(210),chr(205),chr(206),chr(236),chr(222),chr(217),chr(211),chr(223),chr(212),chr(209),chr(241),chr(242),chr(138),chr(154),chr(192),chr(218),chr(224),chr(219),chr(253),chr(221),chr(254),chr(180),chr(173),chr(189),chr(178),chr(161),chr(162),chr(167),chr(247),chr(184),chr(176),chr(168),chr(255),chr(216),chr(248),chr(160)];
 				$text = strtr($text,join("",$in),join("",$out));
 			default:
 				return $text;
@@ -596,8 +596,8 @@ class Translate{
 				$text = self::Trans($text,"utf8","windows-1250");
 				// intentional fall-through: utf8 → windows-1250 → 852
 			case "windows-1250":
-				$in = array(chr(199),chr(252),chr(233),chr(226),chr(228),chr(249),chr(230),chr(231),chr(179),chr(235),chr(213),chr(245),chr(238),chr(143),chr(196),chr(198),chr(201),chr(197),chr(229),chr(244),chr(246),chr(188),chr(190),chr(140),chr(156),chr(214),chr(220),chr(141),chr(157),chr(163),chr(215),chr(232),chr(225),chr(237),chr(243),chr(250),chr(165),chr(185),chr(142),chr(158),chr(202),chr(234),chr(172),chr(159),chr(200),chr(186),chr(171),chr(187),chr(193),chr(194),chr(204),chr(170),chr(175),chr(191),chr(195),chr(227),chr(164),chr(240),chr(208),chr(207),chr(203),chr(239),chr(210),chr(205),chr(206),chr(236),chr(222),chr(217),chr(211),chr(223),chr(212),chr(209),chr(241),chr(242),chr(138),chr(154),chr(192),chr(218),chr(224),chr(219),chr(253),chr(221),chr(254),chr(180),chr(173),chr(189),chr(178),chr(161),chr(162),chr(167),chr(247),chr(184),chr(176),chr(168),chr(255),chr(216),chr(248),chr(160));
-				$out = array(chr(128),chr(129),chr(130),chr(131),chr(132),chr(133),chr(134),chr(135),chr(136),chr(137),chr(138),chr(139),chr(140),chr(141),chr(142),chr(143),chr(144),chr(145),chr(146),chr(147),chr(148),chr(149),chr(150),chr(151),chr(152),chr(153),chr(154),chr(155),chr(156),chr(157),chr(158),chr(159),chr(160),chr(161),chr(162),chr(163),chr(164),chr(165),chr(166),chr(167),chr(168),chr(169),chr(170),chr(171),chr(172),chr(173),chr(174),chr(175),chr(181),chr(182),chr(183),chr(184),chr(189),chr(190),chr(198),chr(199),chr(207),chr(208),chr(209),chr(210),chr(211),chr(212),chr(213),chr(214),chr(215),chr(216),chr(221),chr(222),chr(224),chr(225),chr(226),chr(227),chr(228),chr(229),chr(230),chr(231),chr(232),chr(233),chr(234),chr(235),chr(236),chr(237),chr(238),chr(239),chr(240),chr(241),chr(242),chr(243),chr(244),chr(245),chr(246),chr(247),chr(248),chr(249),chr(250),chr(252),chr(253),chr(255));
+				$in = [chr(199),chr(252),chr(233),chr(226),chr(228),chr(249),chr(230),chr(231),chr(179),chr(235),chr(213),chr(245),chr(238),chr(143),chr(196),chr(198),chr(201),chr(197),chr(229),chr(244),chr(246),chr(188),chr(190),chr(140),chr(156),chr(214),chr(220),chr(141),chr(157),chr(163),chr(215),chr(232),chr(225),chr(237),chr(243),chr(250),chr(165),chr(185),chr(142),chr(158),chr(202),chr(234),chr(172),chr(159),chr(200),chr(186),chr(171),chr(187),chr(193),chr(194),chr(204),chr(170),chr(175),chr(191),chr(195),chr(227),chr(164),chr(240),chr(208),chr(207),chr(203),chr(239),chr(210),chr(205),chr(206),chr(236),chr(222),chr(217),chr(211),chr(223),chr(212),chr(209),chr(241),chr(242),chr(138),chr(154),chr(192),chr(218),chr(224),chr(219),chr(253),chr(221),chr(254),chr(180),chr(173),chr(189),chr(178),chr(161),chr(162),chr(167),chr(247),chr(184),chr(176),chr(168),chr(255),chr(216),chr(248),chr(160)];
+				$out = [chr(128),chr(129),chr(130),chr(131),chr(132),chr(133),chr(134),chr(135),chr(136),chr(137),chr(138),chr(139),chr(140),chr(141),chr(142),chr(143),chr(144),chr(145),chr(146),chr(147),chr(148),chr(149),chr(150),chr(151),chr(152),chr(153),chr(154),chr(155),chr(156),chr(157),chr(158),chr(159),chr(160),chr(161),chr(162),chr(163),chr(164),chr(165),chr(166),chr(167),chr(168),chr(169),chr(170),chr(171),chr(172),chr(173),chr(174),chr(175),chr(181),chr(182),chr(183),chr(184),chr(189),chr(190),chr(198),chr(199),chr(207),chr(208),chr(209),chr(210),chr(211),chr(212),chr(213),chr(214),chr(215),chr(216),chr(221),chr(222),chr(224),chr(225),chr(226),chr(227),chr(228),chr(229),chr(230),chr(231),chr(232),chr(233),chr(234),chr(235),chr(236),chr(237),chr(238),chr(239),chr(240),chr(241),chr(242),chr(243),chr(244),chr(245),chr(246),chr(247),chr(248),chr(249),chr(250),chr(252),chr(253),chr(255)];
 				$text = strtr($text,join("",$in),join("",$out));
 				break;
 			default:
@@ -609,7 +609,7 @@ class Translate{
 	 * @ignore
 	 */
 	static function _TO_utf8(&$text,$from_cp){
-		static $TR_TABLES = array();
+		static $TR_TABLES = [];
 
 		switch ($from_cp){
 			case "iso-8859-2":
@@ -630,7 +630,7 @@ class Translate{
 	 * @ignore
 	 */
 	static function _TO_ascii(&$text,$from_cp){
-		static $TR_TABLES = array();
+		static $TR_TABLES = [];
 
 		switch ($from_cp){
 			case "iso-8859-2":
@@ -668,7 +668,7 @@ class Translate{
 	 * - true -> text is in given charset
 	 * - false -> text is not in given charset or contains a character or sequence from array $disallowed_char_sequencies
 	 */
-	static function CheckEncoding($text,$charset,$disallowed_char_sequencies = array()){
+	static function CheckEncoding($text,$charset,$disallowed_char_sequencies = []){
 		if(is_array($text)){
 			foreach($text as $_key => $_value){
 				$_stat_key = self::CheckEncoding($_key,$charset,$disallowed_char_sequencies);
