@@ -703,7 +703,7 @@ class Translate{
 				continue;
 			}
 			if($utf8_counter>0){
-				if((($code&$_11000000)==$_10000000) || (($code&$_11000000)==$_11000000)){
+				if(($code&$_11000000)==$_10000000){
 					$utf8_counter--;
 				}else{
 					return false;
