@@ -98,7 +98,7 @@ class TcTranslate extends TcBase{
 		$this->assertFalse(Translate::CheckEncoding($text,"utf-8"));
 	}
 
-	function test_conflict_between_slovag_and_german_in_transliteration(){
+	function test_conflict_between_slovak_and_german_in_transliteration(){
 		$this->assertEquals("maso",Translate::Trans("mäso","utf-8","ascii")); // default is Slovak language
 		$this->assertEquals("MASO",Translate::Trans("MÄSO","utf-8","ascii"));
 		$this->assertEquals("maso",Translate::Trans("mäso","utf-8","ascii",["language" => "sk"]));
