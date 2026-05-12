@@ -5,15 +5,15 @@
  *
  * @internal
  *  updates
- *  3.12.2003 - pridana funkce _TO_windows_1250
- *  4.12.2003 - pridana funkce _TO_ascii pro osmibitove kodovani
- * 15.12.2003 - pridana funkce _check_encoding_ascii a _check_encoding_utf8
- * 13.3.2006 - opravena chyba pri Translate::Lower($neco,"windows-1250") a Translate::Upper($neco,"windows-1250")
- * 13.3.2006 - do metod lower a upper pridano kodovani iso-8859-2
- * 16.6.2006 - konvert z windows-1250 do 852 a naopak
- * 26.9.2007 - konvert z utf-8 do ascii (jen ceske znaky)
- * 22.10.2007 - parametrem pro prekodovani ted muze byt i pole
- * 29.11.2007 - doplneno urcovani delky retyezce}
+ *  3.12.2003 - added function _TO_windows_1250
+ *  4.12.2003 - added function _TO_ascii for 8-bit encodings
+ * 15.12.2003 - added functions _check_encoding_ascii and _check_encoding_utf8
+ * 13.3.2006 - fixed bug in Translate::Lower($text,"windows-1250") and Translate::Upper($text,"windows-1250")
+ * 13.3.2006 - added iso-8859-2 encoding support to Lower and Upper methods
+ * 16.6.2006 - conversion between windows-1250 and 852
+ * 26.9.2007 - conversion from utf-8 to ascii (Czech characters only)
+ * 22.10.2007 - conversion parameter can now also be an array
+ * 29.11.2007 - added string length calculation
  *
  * @package Atk14
  * @subpackage Translate
@@ -530,9 +530,9 @@ class Translate{
 			case "utf16":	
 			case "utf8":
 			case "vga":
-				//utf-16 je podmnozina kodovani utf-8	s nejakyma dalsim vyfikundacema.
-				//mela by byt plne kompatibilni ve spodnich dvou planech.
-				//znaky schopne konverze to iso-8859-2 by mely v techto planech.
+				// UTF-16 is a subset of UTF-8 encoding with some additional quirks.
+				// It should be fully compatible in the lower two planes.
+				// Characters convertible to ISO-8859-2 should be in these planes.
 				$_cp = $from_cp=="utf16" ? "utf8" : $from_cp;
 				if(!isset($TR_TABLES[$_cp])){
 					require(dirname(__FILE__)."/tr_tables/to_iso_8859_2/$_cp.php");
@@ -760,7 +760,7 @@ class Translate{
 				}else{
 					return false;
 				}
-				//tento znak
+				// count the start byte itself
 				$utf8_counter--;
 				continue;
 			}
