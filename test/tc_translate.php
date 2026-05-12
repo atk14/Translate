@@ -90,6 +90,9 @@ class TcTranslate extends TcBase{
 
 		$text = chr(0xE2).chr(0x80).chr(0x93);
 		$this->assertTrue(Translate::CheckEncoding($text,"utf-8"));
+
+		$text = "\xC3\xC3\xA9";
+		$this->assertFalse(Translate::CheckEncoding($text,"utf-8"));
 	}
 
 	function test_hacks(){
