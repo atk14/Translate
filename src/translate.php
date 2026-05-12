@@ -679,9 +679,9 @@ class Translate{
 			return true;
 		}
 
-		settype($text,"string");
-		settype($charset,"string");
-		settype($disallowed_char_sequencies,"array");
+		$text = (string)$text;
+		$charset = (string)$charset;
+		$disallowed_char_sequencies = (array)$disallowed_char_sequencies;
 		$charset = self::_GetCharsetByName($charset);
 		$out = true;
 		switch($charset){
@@ -723,8 +723,6 @@ class Translate{
 		$utf8_counter = 0;
 		for($i=0;$i<$_len;$i++){
 			$code = ord($text[$i]);
-			settype($code,"integer");
-			
 			if(($code&$_10000000) == 0){
 				if($utf8_counter!=0){
 					return false;
@@ -774,7 +772,6 @@ class Translate{
 
 		for($i=0;$i<$_len;$i++){
 			$code = ord($text[$i]);
-			settype($code,"integer");
 			if($code>=128){
 				return false;
 			}
